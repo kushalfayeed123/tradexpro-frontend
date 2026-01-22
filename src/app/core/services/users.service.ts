@@ -8,7 +8,7 @@ import { User } from '../../common/models/user.model';
 })
 export class UsersApiService {
     private http = inject(HttpClient);
-    private readonly API_URL = 'http://localhost:3000/api'; // Replace with your URL
+    private readonly API_URL = 'https://topequity5-api.onrender.com/api'; // Replace with your URL
 
 
     async fetchAll(params: any = {}): Promise<any> {

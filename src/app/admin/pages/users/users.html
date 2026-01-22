@@ -31,127 +31,63 @@
         </div>
     </div>
 
+    <app-table [data]="(users$ | async) || []"
+        [headers]="['User Details', 'Verification Status', 'Portfolio Value', 'Role', '']" [meta]="meta$ | async"
+        [loading]="(loading$ | async) || false" (pageChange)="onPageChange($event)">
 
+        <ng-template #rowTemplate let-user>
+            <tr (click)="openDetails(user)" class="hover:bg-blue-50/40 transition-colors group cursor-pointer">
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black text-xs group-hover:scale-110 transition-transform">
+                            {{ getInitials(user.full_name) }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-900">{{ user.full_name }}</p>
+                            <p class="text-[11px] text-slate-500 font-medium tracking-tight">{{ user.email }}</p>
+                        </div>
+                    </div>
+                </td>
 
-    <div class="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-        <div class="overflow-x-auto flex-1 custom-scrollbar">
-            <table class="w-full text-left border-collapse min-w-200">
-                <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-100">
-                    <tr>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">User
-                            Details</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                            Verification Status</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Portfolio
-                            Value</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Role</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
-                        <th class="px-6 py-4"></th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-50">
-                    @for (user of (users$ | async); track user.id) {
-                    <tr (click)="openDetails(user)" class="hover:bg-blue-50/40 transition-colors group cursor-pointer">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black text-xs group-hover:scale-110 transition-transform">
-                                    {{ getInitials(user.full_name) }}
-                                </div>
-                                <div>
-                                    <p class="text-sm font-bold text-slate-900">{{ user.full_name }}</p>
-                                    <p class="text-[11px] text-slate-500 font-medium tracking-tight">{{ user.email }}
-                                    </p>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-1.5 h-1.5 rounded-full"
-                                    [ngClass]="user.is_verified === true ? 'bg-emerald-500' : 'bg-amber-500'">
-                                </div>
-                                <span class="text-xs font-bold text-slate-700">
-                                    {{ user.is_verified ? 'Verified' : 'Not Verified' }}
-                                </span>
-                            </div>
-                            <p class="text-[10px] text-slate-400 mt-1 capitalize">{{ user.kyc?.status != null ?
-                                'Kyc' + ' ' + user.kyc?.status : 'No Kyc Record'
-                                }}
-                            </p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <p class="text-sm font-black text-slate-900">{{ (user.wallet?.balance || 0) | currency }}
-                            </p>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span [class]="getStatusColor(user.role)"
-                                class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase">
-                                {{ user.role }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <button
-                                class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                <td class="px-6 py-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1.5 h-1.5 rounded-full"
+                            [ngClass]="user.is_verified ? 'bg-emerald-500' : 'bg-amber-500'">
+                        </div>
+                        <span class="text-xs font-bold text-slate-700">
+                            {{ user.is_verified ? 'Verified' : 'Not Verified' }}
+                        </span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-1 capitalize">
+                        {{ user.kyc?.status ? 'KYC ' + user.kyc.status : 'No KYC Record' }}
+                    </p>
+                </td>
 
-        @if (loading$ | async) {
-        <div class="px-6 py-4 animate-pulse flex justify-between items-center bg-slate-50/50">
-            <div class="h-4 w-48 bg-slate-200 rounded-md"></div>
-            <div class="flex gap-2">
-                <div class="h-8 w-8 bg-slate-200 rounded-lg"></div>
-                <div class="h-8 w-8 bg-slate-200 rounded-lg"></div>
-            </div>
-        </div>
-        }
-        @else if (meta$ | async; as meta) {
+                <td class="px-6 py-4">
+                    <p class="text-sm font-black text-slate-900">
+                        {{ (user.wallet?.balance || 0) | currency }}
+                    </p>
+                </td>
 
-        <div
-            class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+                <td class="px-6 py-4">
+                    <span [class]="getStatusColor(user.role)"
+                        class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase">
+                        {{ user.role }}
+                    </span>
+                </td>
 
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">
-                Showing {{ getRangeStart(meta) }} to {{ getRangeEnd(meta) }} of {{ meta.total | number }} Users
-            </span>
-
-            <div class="flex items-center gap-2">
-                <button (click)="onPageChange(meta.page - 1)" [disabled]="meta.page === 1"
-                    class="p-2 border border-slate-200 rounded-xl bg-white text-slate-400 disabled:opacity-30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-
-                @for (p of getVisiblePages(meta.page, meta.totalPages); track p) {
-                <button (click)="onPageChange(p)" [class]="p === meta.page 
-        ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
-        : 'bg-white border border-slate-200 text-slate-600 hover:border-blue-400'"
-                    class="px-3.5 py-1 text-xs font-bold rounded-lg transition-all">
-                    {{ p }}
-                </button>
-                }
-
-                <button (click)="onPageChange(meta.page + 1)" [disabled]="meta.page === meta.totalPages"
-                    class="p-2 border border-slate-200 rounded-xl bg-white text-slate-600 disabled:opacity-30">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        }
-    </div>
+                <td class="px-6 py-4 text-right">
+                    <button class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+        </ng-template>
+    </app-table>
 </div>
 
 <div *ngIf="isUserDrawerOpen && (selectedUser$ | async) as user" class="fixed inset-0 z-100 overflow-hidden">

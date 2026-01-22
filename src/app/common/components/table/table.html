@@ -1,0 +1,41 @@
+<div class="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+    <div class="overflow-x-auto flex-1 custom-scrollbar">
+        <table class="w-full text-left border-collapse" [style.minWidth]="minWidth">
+            <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-100">
+                <tr>
+                    @for (header of headers; track header) {
+                    <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                        {{ header }}
+                    </th>
+                    }
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @for (item of data; track item.id) {
+                    <ng-container [ngTemplateOutlet]="rowTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (meta) {
+    <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">
+            Showing Page {{ meta.page }} of {{ meta.totalPages }} ({{ meta.total }} total items)
+        </span>
+        <div class="flex items-center gap-2">
+            <button (click)="onPageChange(meta.page - 1)" [disabled]="meta.page === 1" class="p-2 border border-slate-200 rounded-xl bg-white disabled:opacity-30">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M15 19l-7-7 7-7" stroke-width="2"/></svg>
+            </button>
+            @for (p of getVisiblePages(meta.page, meta.totalPages); track p) {
+                <button (click)="onPageChange(p)" [class]="p === meta.page ? 'bg-blue-600 text-white shadow-md' : 'bg-white text-slate-600 border-slate-200'" class="px-3.5 py-1 text-xs font-bold rounded-lg">
+                    {{ p }}
+                </button>
+            }
+            <button (click)="onPageChange(meta.page + 1)" [disabled]="meta.page === meta.totalPages" class="p-2 border border-slate-200 rounded-xl bg-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path d="M9 5l7 7-7 7" stroke-width="2"/></svg>
+            </button>
+        </div>
+    </div>
+    }
+</div>

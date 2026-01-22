@@ -8,7 +8,7 @@ import { LoginResponse, User } from '../../common/models/user.model';
 })
 export class AuthApiService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'http://localhost:3000/api'; // Replace with your URL
+  private readonly API_URL = 'https://topequity5-api.onrender.com/api'; // Replace with your URL
 
   /**
    * Performs a two-step login:

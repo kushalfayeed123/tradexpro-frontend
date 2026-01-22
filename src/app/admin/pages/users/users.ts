@@ -4,10 +4,11 @@ import { Store } from '@ngxs/store';
 import { FetchUsers, SelectUser, ClearSelectedUser } from './state/users.action';
 import { UsersState } from './state/users.state';
 import { User } from '../../../common/models/user.model';
+import { Table } from '../../../common/components/table/table';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule],
+  imports: [CommonModule, Table],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })

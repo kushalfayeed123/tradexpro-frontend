@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Table } from '../../../common/components/table/table';
+import { Store } from '@ngxs/store';
+import { UsersState } from '../users/state/users.state';
 
 @Component({
   selector: 'app-investments',
-  imports: [CommonModule],
+  imports: [CommonModule, Table],
   templateUrl: './investments.html',
   styleUrl: './investments.css',
 })
 export class Investments {
   // Filter state
   activeFilter = 'all';
+
+    private store = inject(Store);
+
+
+  meta$ = this.store.select(UsersState.meta);
 
   // Mock data based on your schema
   investments = [
@@ -40,4 +48,6 @@ export class Investments {
     const current = new Date().getTime() - new Date(start).getTime();
     return Math.min(Math.max(Math.round((current / total) * 100), 0), 100);
   }
+
+  onPageChange(page: number){}
 }

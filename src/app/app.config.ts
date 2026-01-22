@@ -8,6 +8,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/jwt.interceptor';
 import { AuthState } from './auth/state/auth.state';
 import { UsersState } from './admin/pages/users/state/users.state';
+import { TransactionsState } from './admin/pages/transactions/state/transaction.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +19,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     importProvidersFrom(
-      NgxsModule.forRoot([AuthState, UsersState], {
+      NgxsModule.forRoot([AuthState, UsersState, TransactionsState], {
         developmentMode: true,
       }),
 
