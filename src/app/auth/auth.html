@@ -1,0 +1,122 @@
+<div class="min-h-screen bg-slate-50 flex items-center justify-center p-6 font-sans">
+    <div
+        class="w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">
+
+        <div class="p-10 pb-6 text-center">
+            <div
+                class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-blue-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 00-2 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+
+            @if (mode === 'login') {
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Welcome Back</h1>
+            <p class="text-sm text-slate-400 mt-2 font-medium">Access your investment dashboard</p>
+            } @else if (mode === 'register') {
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Create Account</h1>
+            <p class="text-sm text-slate-400 mt-2 font-medium">Start your wealth journey</p>
+            } @else {
+            <h1 class="text-2xl font-black text-slate-900 tracking-tight">Verify Identity</h1>
+            <p class="text-sm text-slate-500 mt-2 font-medium">Enter the code sent to your email</p>
+            }
+        </div>
+
+        <div class="px-10 pb-10">
+            @if (mode === 'login') {
+            <div class="space-y-4 animate-in fade-in duration-300">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                    <input type="email" [(ngModel)]="formData.email" placeholder="name@email.com"
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all font-bold text-slate-900">
+                </div>
+                <div class="space-y-1">
+                    <div class="flex justify-between items-center">
+                        <label
+                            class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                        <button class="text-[10px] font-black text-blue-600 uppercase">Forgot?</button>
+                    </div>
+                    <input type="password" [(ngModel)]="formData.password" placeholder="••••••••"
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-blue-500/20 outline-none transition-all font-bold text-slate-900">
+                </div>@if (isLoading$ | async) {
+                <div class="fixed inset-0 z-100 bg-white/60 backdrop-blur-sm flex items-center justify-center">
+                    <div class="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin">
+                    </div>
+                </div>
+                }
+                <button (click)="handleLogin()"
+                    class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-slate-200 hover:scale-[1.02] active:scale-[0.98] transition-all">Sign
+                    In</button>
+            </div>
+            }
+
+            @if (mode === 'register') {
+            <div class="space-y-4 animate-in fade-in duration-300">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First
+                            Name</label>
+                        <input type="text" [(ngModel)]="formData.first_name"
+                            class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last
+                            Name</label>
+                        <input type="text" [(ngModel)]="formData.last_name"
+                            class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                    </div>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
+                    <input type="email" [(ngModel)]="formData.email"
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone
+                        Number</label>
+                    <input type="tel" [(ngModel)]="formData.phone"
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                </div>
+                <button (click)="handleRegister()"
+                    class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all">
+                    @if (isLoading$ | async) { <span>Creating...</span> } @else { <span>Create Account</span> }
+                </button>
+            </div>
+            }
+
+            @if (mode === 'verify') {
+            <div class="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+                <div class="flex justify-between gap-2">
+                    @for (slot of formData.otp; track $index) {
+                    <div class="w-12 h-14">
+                        <input type="text" maxlength="1" [(ngModel)]="formData.otp[$index]"
+                            (input)="onOtpInput($event, $index)"
+                            class="w-full h-full bg-slate-50 border-2 border-slate-100 rounded-xl text-center font-black text-xl text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+                    </div>
+                    }
+                </div>
+                <button (click)="handleVerify()"
+                    class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all">Verify
+                    Now</button>
+                <div class="text-center">
+                    <button class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Resend Code</button>
+                </div>
+            </div>
+            }
+
+            <div class="mt-8 pt-6 border-t border-slate-50 text-center">
+                <p class="text-xs font-medium text-slate-400">
+                    @if (mode === 'login') {
+                    Don't have an account? <button (click)="switchMode('register')"
+                        class="text-blue-600 font-bold hover:underline">Register</button>
+                    } @else {
+                    Already have an account? <button (click)="switchMode('login')"
+                        class="text-blue-600 font-bold hover:underline">Log In</button>
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,104 @@
+<div class="flex flex-col h-full space-y-6">
+  <div class="shrink-0 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-black text-slate-900 tracking-tight">Active Investments</h1>
+      <p class="text-sm text-slate-500 font-medium">Tracking capital growth across {{ investments.length }} active contracts</p>
+    </div>
+    
+    <div class="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
+      <button (click)="activeFilter = 'all'" [class.bg-slate-900]="activeFilter === 'all'" [class.text-white]="activeFilter === 'all'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all">All</button>
+      <button (click)="activeFilter = 'active'" [class.bg-slate-900]="activeFilter === 'active'" [class.text-white]="activeFilter === 'active'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-500">Active</button>
+      <button (click)="activeFilter = 'matured'" [class.bg-slate-900]="activeFilter === 'matured'" [class.text-white]="activeFilter === 'matured'" class="px-4 py-2 rounded-xl text-xs font-bold transition-all text-slate-500">Matured</button>
+    </div>
+  </div>
+
+  <div class="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+    <div class="overflow-x-auto flex-1 custom-scrollbar">
+      <table class="w-full text-left border-collapse min-w-[1100px]">
+        <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-100">
+          <tr>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Investor & Plan</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Principal</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Accrued Return</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Timeline / Progress</th>
+            <th class="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">Status</th>
+            <th class="px-6 py-4"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          @for (inv of investments; track inv.id) {
+            <tr class="group hover:bg-slate-50/50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs">
+                    {{ inv.user.name.substring(0,2) }}
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-slate-900">{{ inv.user.name }}</p>
+                    <p class="text-[11px] text-blue-600 font-black uppercase tracking-tighter">{{ inv.plan.name }}</p>
+                  </div>
+                </div>
+              </td>
+
+              <td class="px-6 py-4">
+                <p class="text-sm font-black text-slate-900">${{ inv.principal | number:'1.2-2' }}</p>
+                <p class="text-[10px] text-slate-400 font-medium">Initial Capital</p>
+              </td>
+
+              <td class="px-6 py-4">
+                <p class="text-sm font-black text-emerald-600">+${{ inv.accrued_return | number:'1.2-2' }}</p>
+                <p class="text-[10px] text-emerald-600/60 font-bold uppercase tracking-widest">Yield Earned</p>
+              </td>
+
+              <td class="px-6 py-4">
+                <div class="w-48">
+                  <div class="flex justify-between mb-1 text-[10px] font-bold text-slate-500">
+                    <span>{{ inv.start_date | date:'MMM d, y' }}</span>
+                    <span>{{ calculateProgress(inv.start_date, inv.end_date) }}%</span>
+                  </div>
+                  <div class="h-1.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div class="h-full bg-blue-600 rounded-full" [style.width.%]="calculateProgress(inv.start_date, inv.end_date)"></div>
+                  </div>
+                  <p class="mt-1 text-[9px] text-slate-400 uppercase font-black tracking-tighter">Ends: {{ inv.end_date | date:'mediumDate' }}</p>
+                </div>
+              </td>
+
+              <td class="px-6 py-4">
+                <span [ngClass]="{
+                  'bg-emerald-50 text-emerald-600 border-emerald-100': inv.status === 'active',
+                  'bg-amber-50 text-amber-600 border-amber-100': inv.status === 'pending',
+                  'bg-blue-50 text-blue-600 border-blue-100': inv.status === 'matured',
+                  'bg-slate-100 text-slate-500 border-slate-200': inv.status === 'withdrawn'
+                }" class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase border tracking-tighter">
+                  {{ inv.status }}
+                </span>
+              </td>
+
+              <td class="px-6 py-4 text-right">
+                <button class="p-2 text-slate-400 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" /></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="px-8 py-4 bg-slate-900 text-white flex items-center justify-between shrink-0">
+      <div class="flex gap-8">
+        <div>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Total Assets Under Management</p>
+          <p class="text-lg font-black">$4,209,100.00</p>
+        </div>
+        <div>
+          <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Expected Payouts (30d)</p>
+          <p class="text-lg font-black text-blue-400">$142,000.00</p>
+        </div>
+      </div>
+      <button class="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold transition-all">
+        Download Reports
+      </button>
+    </div>
+  </div>
+</div>

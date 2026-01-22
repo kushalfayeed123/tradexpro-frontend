@@ -2,20 +2,28 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
         <div>
             <h1 class="text-2xl font-black text-slate-900 tracking-tight">User Directory</h1>
-            <p class="text-sm text-slate-500 font-medium">Manage and monitor 12,402 registered investors</p>
+            @if (meta$ | async; as meta) {
+
+            <p class="text-sm text-slate-500 font-medium">Manage and monitor {{meta.total}} registered investors</p>
+            }
         </div>
         <div class="flex items-center gap-3">
             <div class="relative group">
-                <span class="absolute inset-y-0 left-3 flex items-center text-slate-400 group-focus-within:text-blue-500 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <span
+                    class="absolute inset-y-0 left-3 flex items-center text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </span>
                 <input type="text" placeholder="Search users..."
                     class="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none w-full md:w-64 transition-all shadow-sm">
             </div>
-            <button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <button
+                class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
                 Create User
@@ -23,161 +31,237 @@
         </div>
     </div>
 
-    <div class="flex items-center gap-2 overflow-x-auto pb-2 shrink-0 custom-scrollbar">
-        <button class="px-4 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-full shadow-md">All Users</button>
-        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-full hover:border-blue-400 transition-colors">Pending KYC</button>
-        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-full hover:border-blue-400 transition-colors">High Net Worth</button>
-        <button class="px-4 py-1.5 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-full hover:border-blue-400 transition-colors">Suspended</button>
-    </div>
+
 
     <div class="flex-1 min-h-0 bg-white rounded-3xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
         <div class="overflow-x-auto flex-1 custom-scrollbar">
             <table class="w-full text-left border-collapse min-w-200">
                 <thead class="sticky top-0 z-10 bg-slate-50 border-b border-slate-100">
                     <tr>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">User Details</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Verification Status</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Portfolio Value</th>
-                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Risk Profile</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">User
+                            Details</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                            Verification Status</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Portfolio
+                            Value</th>
+                        <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Role</th>
                         <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">Status</th>
                         <th class="px-6 py-4"></th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50">
-                    <tr (click)="isUserDrawerOpen = true" class="hover:bg-blue-50/40 transition-colors group cursor-pointer">
+                    @for (user of (users$ | async); track user.id) {
+                    <tr (click)="openDetails(user)" class="hover:bg-blue-50/40 transition-colors group cursor-pointer">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black text-xs group-hover:scale-110 transition-transform">
-                                    AT
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-black text-xs group-hover:scale-110 transition-transform">
+                                    {{ getInitials(user.full_name) }}
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-900">Alex Thompson</p>
-                                    <p class="text-[11px] text-slate-500 font-medium tracking-tight">alex.t&#64;finmail.com</p>
+                                    <p class="text-sm font-bold text-slate-900">{{ user.full_name }}</p>
+                                    <p class="text-[11px] text-slate-500 font-medium tracking-tight">{{ user.email }}
+                                    </p>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-2">
-                                <div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                                <span class="text-xs font-bold text-slate-700">Level 3 (Full)</span>
+                                <div class="w-1.5 h-1.5 rounded-full"
+                                    [ngClass]="user.is_verified === true ? 'bg-emerald-500' : 'bg-amber-500'">
+                                </div>
+                                <span class="text-xs font-bold text-slate-700">
+                                    {{ user.is_verified ? 'Verified' : 'Not Verified' }}
+                                </span>
                             </div>
-                            <p class="text-[10px] text-slate-400 mt-1">Verified Jan 2026</p>
+                            <p class="text-[10px] text-slate-400 mt-1 capitalize">{{ user.kyc?.status != null ?
+                                'Kyc' + ' ' + user.kyc?.status : 'No Kyc Record'
+                                }}
+                            </p>
                         </td>
                         <td class="px-6 py-4">
-                            <p class="text-sm font-black text-slate-900">$142,500.00</p>
+                            <p class="text-sm font-black text-slate-900">{{ (user.wallet?.balance || 0) | currency }}
+                            </p>
                         </td>
                         <td class="px-6 py-4">
-                            <span class="px-2 py-0.5 bg-amber-50 text-amber-600 text-[10px] font-black rounded border border-amber-100">AGGRESSIVE</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-100">
-                                ACTIVE
+                            <span [class]="getStatusColor(user.role)"
+                                class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border uppercase">
+                                {{ user.role }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <button class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            <button
+                                class="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
                                 </svg>
                             </button>
                         </td>
                     </tr>
-                    </tbody>
+                    }
+                </tbody>
             </table>
         </div>
 
-            <div class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
-            <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">Showing 1 to 10 of 12,402 Users</span>
+        @if (loading$ | async) {
+        <div class="px-6 py-4 animate-pulse flex justify-between items-center bg-slate-50/50">
+            <div class="h-4 w-48 bg-slate-200 rounded-md"></div>
+            <div class="flex gap-2">
+                <div class="h-8 w-8 bg-slate-200 rounded-lg"></div>
+                <div class="h-8 w-8 bg-slate-200 rounded-lg"></div>
+            </div>
+        </div>
+        }
+        @else if (meta$ | async; as meta) {
+
+        <div
+            class="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 shrink-0">
+
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-tighter">
+                Showing {{ getRangeStart(meta) }} to {{ getRangeEnd(meta) }} of {{ meta.total | number }} Users
+            </span>
+
             <div class="flex items-center gap-2">
-                <button class="p-2 border border-slate-200 rounded-xl bg-white text-slate-400 disabled:opacity-50">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                <button (click)="onPageChange(meta.page - 1)" [disabled]="meta.page === 1"
+                    class="p-2 border border-slate-200 rounded-xl bg-white text-slate-400 disabled:opacity-30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
                 </button>
-                <button class="px-3.5 py-1 bg-blue-600 text-white text-xs font-bold rounded-lg shadow-md shadow-blue-200">1</button>
-                <button class="px-3.5 py-1 bg-white border border-slate-200 text-slate-600 text-xs font-bold rounded-lg hover:border-blue-400 transition-all">2</button>
-                <button class="p-2 border border-slate-200 rounded-xl bg-white text-slate-600 hover:border-blue-400">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+
+                @for (p of getVisiblePages(meta.page, meta.totalPages); track p) {
+                <button (click)="onPageChange(p)" [class]="p === meta.page 
+        ? 'bg-blue-600 text-white shadow-md shadow-blue-200' 
+        : 'bg-white border border-slate-200 text-slate-600 hover:border-blue-400'"
+                    class="px-3.5 py-1 text-xs font-bold rounded-lg transition-all">
+                    {{ p }}
+                </button>
+                }
+
+                <button (click)="onPageChange(meta.page + 1)" [disabled]="meta.page === meta.totalPages"
+                    class="p-2 border border-slate-200 rounded-xl bg-white text-slate-600 disabled:opacity-30">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
                 </button>
             </div>
         </div>
+        }
     </div>
 </div>
 
-<div *ngIf="isUserDrawerOpen" class="fixed inset-0 z-100 overflow-hidden">
-    <div (click)="isUserDrawerOpen = false" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300"></div>
+<div *ngIf="isUserDrawerOpen && (selectedUser$ | async) as user" class="fixed inset-0 z-100 overflow-hidden">
+    <div (click)="isUserDrawerOpen = false"
+        class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-300"></div>
 
     <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
         <div class="pointer-events-auto w-screen max-w-xl">
             <div class="flex h-full flex-col bg-white shadow-2xl border-l border-slate-200">
+
                 <div class="px-6 py-8 bg-slate-900 text-white shrink-0">
                     <div class="flex items-start justify-between">
                         <div class="flex items-center gap-4">
-                            <div class="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-2xl font-black shadow-lg border-4 border-slate-800">AT</div>
+                            <div
+                                class="w-16 h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-2xl font-black shadow-lg border-4 border-slate-800">
+                                {{ getInitials(user.full_name) }}
+                            </div>
                             <div>
-                                <h2 class="text-xl font-bold">Alex Thompson</h2>
-                                <p class="text-blue-300 text-xs font-medium tracking-wide">Investor #88291</p>
+                                <h2 class="text-xl font-bold">{{ user.full_name }}</h2>
+                                <p class="text-blue-300 text-xs font-medium tracking-wide">
+                                    {{ user.role | uppercase }} #{{ user.id.substring(0, 5) }}
+                                </p>
                             </div>
                         </div>
-                        <button (click)="isUserDrawerOpen = false" class="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                        <button (click)="isUserDrawerOpen = false"
+                            class="p-2 bg-white/10 hover:bg-white/20 rounded-xl transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                         </button>
                     </div>
                 </div>
 
                 <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
+
                     <div class="grid grid-cols-2 gap-4">
                         <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
-                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Invested</p>
-                            <p class="text-xl font-black text-slate-900 mt-1">$142,500</p>
+                            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verification</p>
+                            <p class="text-xl font-black text-slate-900 mt-1 capitalize">{{ user.kyc?.status ||
+                                'NotStarted' }}</p>
                         </div>
                         <div class="p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Balance</p>
-                            <p class="text-xl font-black text-blue-700 mt-1">$4,210</p>
+                            <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest">KYC Level</p>
+                            <p class="text-xl font-black text-blue-700 mt-1">Level {{ user.kyc?.level || 0 }}</p>
                         </div>
                     </div>
 
                     <div class="space-y-4">
-                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest border-l-4 border-blue-600 pl-3">Personal Details</h3>
+                        <h3
+                            class="text-xs font-black text-slate-900 uppercase tracking-widest border-l-4 border-blue-600 pl-3">
+                            Personal Details
+                        </h3>
                         <div class="grid grid-cols-2 gap-y-6 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
                             <div>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase">Email Address</p>
-                                <p class="text-sm font-semibold text-slate-700">alex.t&#64;finmail.com</p>
+                                <p class="text-sm font-semibold text-slate-700">{{ user.email }}</p>
                             </div>
                             <div>
                                 <p class="text-[10px] font-bold text-slate-400 uppercase">Phone</p>
-                                <p class="text-sm font-semibold text-slate-700">+1 555 0123</p>
+                                <p class="text-sm font-semibold text-slate-700">{{ user.profile?.phone || 'N/A' }}</p>
                             </div>
                             <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Nationality</p>
-                                <p class="text-sm font-semibold text-slate-700">United Kingdom</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Country</p>
+                                <p class="text-sm font-semibold text-slate-700">{{ user.profile?.country || 'N/A' }}</p>
                             </div>
                             <div>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Verification Date</p>
-                                <p class="text-sm font-semibold text-slate-700">Jan 12, 2026</p>
+                                <p class="text-[10px] font-bold text-slate-400 uppercase">Joined Date</p>
+                                <p class="text-sm font-semibold text-slate-700">{{ user.created_at | date:'mediumDate'
+                                    }}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <h3 class="text-xs font-black text-slate-900 uppercase tracking-widest border-l-4 border-emerald-500 pl-3">Active Subscriptions</h3>
+                    <div *ngIf="user.role === 'investor'" class="space-y-4">
+                        <h3
+                            class="text-xs font-black text-slate-900 uppercase tracking-widest border-l-4 border-emerald-500 pl-3">
+                            Security Overview
+                        </h3>
                         <div class="p-4 rounded-2xl border-2 border-slate-100 flex items-center justify-between group">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                                <div
+                                    class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
                                 </div>
                                 <div>
-                                    <p class="text-sm font-bold text-slate-900">Commercial Equity</p>
-                                    <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-tight">+12.4% ROI</p>
+                                    <p class="text-sm font-bold text-slate-900">Account Security</p>
+                                    <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-tight">2FA
+                                        Enabled</p>
                                 </div>
                             </div>
-                            <p class="text-sm font-black text-slate-900">$100k</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="p-6 bg-slate-50 border-t border-slate-200 flex gap-3 shrink-0">
-                    <button class="flex-1 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black text-rose-500 uppercase tracking-widest hover:bg-rose-50 transition-colors">Suspend</button>
-                    <button class="flex-2 py-3 px-8 bg-blue-600 rounded-xl text-xs font-black text-white uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700">Manage Assets</button>
-                </div>
+                <!-- <div class="p-6 bg-slate-50 border-t border-slate-200 flex gap-3 shrink-0">
+                    <button (click)="suspendUser(user.id)"
+                        class="flex-1 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black text-rose-500 uppercase tracking-widest hover:bg-rose-50 transition-colors">
+                        Suspend User
+                    </button>
+                    <button
+                        class="flex-2 py-3 px-8 bg-blue-600 rounded-xl text-xs font-black text-white uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700">
+                        Edit Profile
+                    </button>
+                </div> -->
             </div>
         </div>
     </div>
