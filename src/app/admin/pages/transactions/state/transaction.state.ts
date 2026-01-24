@@ -3,7 +3,6 @@
 import { Injectable, inject } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { tap, catchError, of, forkJoin, finalize } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { FetchTransactions, SelectTransaction, ClearSelectedTransaction, ApproveTransaction, ReverseTransaction, RejectTransaction } from './transaction.action';
 import { TransactionsService } from '../../../../core/services/transactions.service';
 import { SetLoading } from '../../../../auth/state/auth.actions';

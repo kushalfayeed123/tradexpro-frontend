@@ -31,6 +31,9 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       } else if (error.status >= 500) {
         notify.show('Server error. Please try again later.', 'error');
       }
+      else if (error.status == 400) {
+        notify.show(`Bad Request. ${error.error.message}.`, 'error');
+      }
 
       return throwError(() => error);
     })

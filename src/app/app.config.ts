@@ -9,6 +9,8 @@ import { authInterceptor } from './core/interceptors/jwt.interceptor';
 import { AuthState } from './auth/state/auth.state';
 import { UsersState } from './admin/pages/users/state/users.state';
 import { TransactionsState } from './admin/pages/transactions/state/transaction.state';
+import { InvestmentPlansState } from './admin/pages/investment-plans/state/investment-plans.state';
+import { InvestmentState } from './admin/pages/investments/state/investments.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     importProvidersFrom(
-      NgxsModule.forRoot([AuthState, UsersState, TransactionsState], {
+      NgxsModule.forRoot([AuthState, UsersState, TransactionsState, InvestmentPlansState, InvestmentState], {
         developmentMode: true,
       }),
 
