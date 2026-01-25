@@ -11,7 +11,7 @@ export interface InvestmentParams {
 @Injectable({ providedIn: 'root' })
 export class InvestmentsService {
   private http = inject(HttpClient);
-  private readonly API_URL = environment.apiUrl;
+  private readonly API_URL = `${environment.apiUrl}/investments`;
 
   getAll(params?: InvestmentParams) {
     let httpParams = new HttpParams();
@@ -25,7 +25,7 @@ export class InvestmentsService {
     }
 
     // Returns { data: [], meta: { total, page, last_page } }
-    return this.http.get<any>(this.API_URL, { params: httpParams });
+    return this.http.get<any>(`${this.API_URL}`, { params: httpParams });
   }
 
   mature(id: string) {
