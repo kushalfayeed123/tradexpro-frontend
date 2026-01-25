@@ -12,10 +12,13 @@ export class UsersApiService {
     private readonly API_URL = environment.apiUrl;
 
     async fetchAll(params: any = {}): Promise<any> {
-        // HttpClient's 'params' option automatically handles the URL encoding
-        // e.g., it converts { email: 'test' } to ?email=test
+        const queryParams = {
+            kyc_status: 'all',
+            ...params
+        };
+
         return lastValueFrom(
-            this.http.get(`${this.API_URL}/users`, { params })
+            this.http.get(`${this.API_URL}/users`, { params: queryParams })
         );
     }
 
