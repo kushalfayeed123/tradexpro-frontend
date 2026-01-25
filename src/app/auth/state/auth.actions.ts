@@ -18,6 +18,10 @@ export class UpdateUser {
   static readonly type = '[Auth] Update User';
   constructor(public user: User) {}
 }
+export class VerifyOtp {
+  static readonly type = '[Auth] Verify Otp';
+  constructor(public code: string, public userId: string) {}
+}
 export class InitializeAuth {
   static readonly type = '[Auth] Initialize';
 }

@@ -58,50 +58,106 @@
                     <div class="space-y-1">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">First
                             Name</label>
-                        <input type="text" [(ngModel)]="formData.first_name"
-                            class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                        <input type="text" [(ngModel)]="formData.first_name" [disabled]="(isLoading$ | async) ?? false"
+                            class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 transition-all">
                     </div>
                     <div class="space-y-1">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Last
                             Name</label>
-                        <input type="text" [(ngModel)]="formData.last_name"
-                            class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                        <input type="text" [(ngModel)]="formData.last_name" [disabled]="(isLoading$ | async) ?? false"
+                            class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 transition-all">
                     </div>
                 </div>
+
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email</label>
-                    <input type="email" [(ngModel)]="formData.email"
-                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email
+                        Address</label>
+                    <input type="email" [(ngModel)]="formData.email" [disabled]="(isLoading$ | async) ?? false"
+                        placeholder="name@company.com"
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 transition-all">
                 </div>
+
                 <div class="space-y-1">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone
                         Number</label>
-                    <input type="tel" [(ngModel)]="formData.phone"
-                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900">
+                    <input type="tel" [(ngModel)]="formData.phone" [disabled]="(isLoading$ | async) ?? false"
+                        placeholder="+234..."
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 transition-all">
                 </div>
-                <button (click)="handleRegister()"
-                    class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 transition-all">
-                    @if (isLoading$ | async) { <span>Creating...</span> } @else { <span>Create Account</span> }
+
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Set
+                        Password</label>
+                    <input type="password" [(ngModel)]="formData.password" [disabled]="(isLoading$ | async) ?? false"
+                        placeholder="••••••••"
+                        class="w-full px-5 py-3.5 bg-slate-50 border border-slate-100 rounded-2xl outline-none font-bold text-slate-900 focus:ring-2 focus:ring-blue-500/20 transition-all">
+                </div>
+
+                <button (click)="handleRegister()" [disabled]="(isLoading$ | async) ?? false"
+                    class="w-full py-4 bg-blue-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-blue-100 hover:bg-blue-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed mt-2">
+                    @if (isLoading$ | async) {
+                    <span class="flex items-center justify-center gap-2">
+                        <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        Creating Account...
+                    </span>
+                    } @else {
+                    <span>Create Account</span>
+                    }
                 </button>
             </div>
             }
 
+
             @if (mode === 'verify') {
             <div class="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+                <div class="text-center">
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 bg-slate-50 rounded-full border border-slate-100">
+                        <span class="relative flex h-2 w-2">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                        </span>
+                        <span class="text-[11px] font-black text-slate-500 uppercase tracking-tighter">
+                            Code expires in: <span class="text-blue-600">{{ timerDisplay }}</span>
+                        </span>
+                    </div>
+                </div>
+
                 <div class="flex justify-between gap-2">
                     @for (slot of formData.otp; track $index) {
                     <div class="w-12 h-14">
-                        <input type="text" maxlength="1" [(ngModel)]="formData.otp[$index]"
-                            (input)="onOtpInput($event, $index)"
-                            class="w-full h-full bg-slate-50 border-2 border-slate-100 rounded-xl text-center font-black text-xl text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all">
+                        <input type="text" maxlength="1" inputmode="numeric" [(ngModel)]="formData.otp[$index]"
+                            (input)="onOtpInput($event, $index)" (keydown)="onOtpKeyDown($event, $index)"
+                            [disabled]="(isLoading$ | async) ?? false"
+                            class="w-full h-full bg-slate-50 border-2 border-slate-100 rounded-xl text-center font-black text-xl text-slate-900 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all disabled:opacity-50">
                     </div>
                     }
                 </div>
-                <button (click)="handleVerify()"
-                    class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-100 hover:bg-emerald-700 transition-all">Verify
-                    Now</button>
-                <div class="text-center">
-                    <button class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Resend Code</button>
+
+                <div class="space-y-3">
+                    <button (click)="handleVerify()" [disabled]="(isLoading$ | async)"
+                        class="w-full py-4 bg-emerald-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-emerald-100 hover:bg-emerald-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                        @if (isLoading$ | async) {
+                        <span class="flex items-center justify-center gap-2">
+                            <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin">
+                            </div>
+                            Verifying...
+                        </span>
+                        } @else {
+                        Verify Now
+                        }
+                    </button>
+
+                    <div class="text-center">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+                            Didn't receive a code?
+                            <button (click)="handleResendOtp()" [disabled]="!canResend || (isLoading$ | async)"
+                                class="text-blue-600 hover:underline disabled:text-slate-300 disabled:no-underline transition-colors">
+                                Resend {{ !canResend ? '(' + timerDisplay + ')' : '' }}
+                            </button>
+                        </p>
+                    </div>
                 </div>
             </div>
             }

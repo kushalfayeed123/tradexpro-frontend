@@ -2,14 +2,17 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { LoginResponse, User } from '../../common/models/user.model';
+import { environment } from '../../../environments/environment';
+
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthApiService {
   private http = inject(HttpClient);
-  private readonly API_URL = 'https://topequity5-api.onrender.com/api'; // Replace with your URL
-
+  private readonly API_URL = environment.apiUrl;
   /**
    * Performs a two-step login:
    * 1. Authenticates credentials to get JWT
@@ -30,6 +33,7 @@ export class AuthApiService {
       this.http.get<User>(`${this.API_URL}/users/me`, { headers })
     );
 
+
     return {
       token: token,
       user: userProfile
@@ -39,17 +43,47 @@ export class AuthApiService {
   /**
    * Optional: Verify OTP after registration
    */
-  async verifyOtp(email: string, code: string) {
+  async verifyOtp(userId: string, code: string) {
     return lastValueFrom(
-      this.http.post(`${this.API_URL}/auth/verify`, { email, code })
+      this.http.post<{ success: boolean, message: string }>(
+        `${this.API_URL}/auth/verify`,
+        { 'userId': userId, 'code': code, } // Backend expects these keys
+      )
     );
   }
 
+  async resendOtp(userId: string, email: string, phone: string) {
 
-  async signUp(userData: any) {
+    try {
+      await lastValueFrom(
+        this.http.post(`${this.API_URL}/notifications/otp/request`, {
+          userId: userId,
+          email,
+          phone,
+          type: 'verification',
+        })
+      );
+    } catch (e) {
+      console.error('Email OTP failed:', e);
+    }
+
+
+
+
+  }
+
+
+  async signUp(userData: any): Promise<any> {
     // We remove OTP from registration payload if the API doesn't expect it yet
-    const { otp, ...payload } = userData;
-    return lastValueFrom(
+    const payload = {
+      email: userData.email,
+      password: userData.password,
+      firstName: userData.first_name,
+      lastName: userData.last_name,
+      phone: userData.phone,
+      country: 'USA' // Add a default or bind to UI
+
+    }; return lastValueFrom(
       this.http.post(`${this.API_URL}/auth/register`, payload)
     );
   }

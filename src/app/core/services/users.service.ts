@@ -2,14 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { User } from '../../common/models/user.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UsersApiService {
     private http = inject(HttpClient);
-    private readonly API_URL = 'https://topequity5-api.onrender.com/api'; // Replace with your URL
-
+    private readonly API_URL = environment.apiUrl;
 
     async fetchAll(params: any = {}): Promise<any> {
         // HttpClient's 'params' option automatically handles the URL encoding

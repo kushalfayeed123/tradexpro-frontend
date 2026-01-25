@@ -1,7 +1,7 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { InitializeAuth, Login, Logout, SetLoading, UpdateUser } from './auth.actions';
+import { InitializeAuth, Login, Logout, SetLoading, UpdateUser, VerifyOtp } from './auth.actions';
 import { User } from '../../common/models/user.model';
 import { AuthApiService } from '../../core/services/auth.service';
 import { NotificationService } from '../../core/services/notification.service';
@@ -57,6 +57,34 @@ export class AuthState {
   static role(state: AuthStateModel) { return state.user?.role; }
 
   // --- Actions ---
+
+  @Action(VerifyOtp)
+  verifyOtp(ctx: StateContext<AuthStateModel>, action: VerifyOtp) {
+    // 1. Set loading to true
+    ctx.dispatch(new SetLoading(true));
+
+    // 2. Call the API
+    // We use from() if verifyOtp returns a Promise, or just the observable
+    return this.authService.verifyOtp(action.userId, action.code).then(
+      (response: any) => {
+        // 3. Success logic
+        // If your backend returns the updated user, update state here
+        const state = ctx.getState();
+        if (state.user && state.user.id === action.userId) {
+          ctx.patchState({
+            user: { ...state.user, is_verified: true }
+          });
+        }
+
+        ctx.dispatch(new SetLoading(false));
+      },
+      (error: any) => {
+        // 4. Error logic
+        ctx.dispatch(new SetLoading(false));
+        throw error; // Re-throw so the component can catch it for the notification
+      }
+    );
+  }
 
   @Action(SetLoading)
   setLoading(ctx: StateContext<AuthStateModel>, { isLoading }: SetLoading) {

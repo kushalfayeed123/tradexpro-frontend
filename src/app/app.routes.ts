@@ -10,5 +10,11 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./admin/admin.routes').then(m => m.ADMIN_ROUTES),
   },
+  {
+    path: 'investor',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./investor/investor-routes').then(m => m.INVESTOR_ROUTES),
+  },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
