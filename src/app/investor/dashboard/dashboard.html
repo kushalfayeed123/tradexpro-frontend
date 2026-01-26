@@ -1,58 +1,64 @@
-<div class="max-w-[1400px] mx-auto space-y-8">
-  
+@if (stats$ | async; as stats) {
+<div class="max-w-350 mx-auto space-y-8 animate-in fade-in duration-500">
+
   <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
     <div>
       <h1 class="text-3xl font-black text-slate-900 tracking-tight">Overview</h1>
       <p class="text-slate-500 text-sm font-medium">Monitoring your capital growth and distributions.</p>
     </div>
     <div class="flex gap-2 w-full md:w-auto">
-      <button class="flex-1 md:flex-none px-6 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black uppercase text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Withdraw</button>
-      <button class="flex-1 md:flex-none px-6 py-3 bg-blue-600 rounded-xl text-xs font-black uppercase text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">Deposit Capital</button>
+      <button (click)="openWithdrawModal()"
+        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black uppercase text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Withdraw</button>
+      <button (click)="startDeposit()"
+        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-blue-600 rounded-xl text-xs font-black uppercase text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">Deposit
+        Capital</button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div class="md:col-span-2 bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl">
+    <div
+      class="md:col-span-2 bg-slate-900 rounded-4xl p-8 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl">
       <div class="relative z-10">
         <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Total Net Worth</p>
         <div class="flex items-baseline gap-2">
-          <h2 class="text-6xl font-black tracking-tighter">$1,240.20</h2>
-          <span class="text-emerald-400 text-sm font-bold bg-emerald-400/10 px-2 py-1 rounded">+12.5%</span>
+          <h2 class="text-6xl font-black tracking-tighter">{{ stats.total_net_worth | currency }}</h2>
+          <span class="text-emerald-400 text-sm font-bold bg-emerald-400/10 px-2 py-1 rounded">+{{
+            stats.growth_percentage }}%</span>
         </div>
       </div>
       <div class="mt-12 flex gap-10 relative z-10">
         <div>
           <p class="text-slate-500 text-[10px] font-black uppercase mb-1">Active Investments</p>
-          <p class="text-xl font-bold">$340.20</p>
+          <p class="text-xl font-bold">{{ stats.active_investments | currency }}</p>
         </div>
         <div class="border-l border-slate-800 pl-10">
           <p class="text-slate-500 text-[10px] font-black uppercase mb-1">Ledger Balance</p>
-          <p class="text-xl font-bold text-blue-400">$900.00</p>
+          <p class="text-xl font-bold text-blue-400">{{ stats.ledger_balance | currency }}</p>
         </div>
       </div>
       <div class="absolute right-0 top-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[100px] -mr-32 -mt-32"></div>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-[2rem] p-8 flex flex-col justify-between shadow-sm">
+    <div class="bg-white border border-slate-200 rounded-4xl p-8 flex flex-col justify-between shadow-sm">
       <div class="space-y-4">
         <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Growth Performance</p>
         <div class="space-y-2">
           <div class="flex justify-between text-xs font-bold uppercase tracking-tighter">
             <span class="text-slate-500">Yield Progress</span>
-            <span class="text-blue-600">68%</span>
+            <span class="text-blue-600">{{ stats.yield_progress }}%</span>
           </div>
           <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-            <div class="h-full bg-blue-600 rounded-full w-[68%]"></div>
+            <div class="h-full bg-blue-600 rounded-full transition-all duration-1000"
+              [style.width.%]="stats.yield_progress"></div>
           </div>
         </div>
       </div>
-      <p class="text-[11px] text-slate-500 italic mt-6 italic">Next distribution in 4 days</p>
+      <p class="text-[11px] text-slate-500 mt-6 italic">Next distribution in {{ stats.next_distribution_days }} days</p>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    
-    <div class="lg:col-span-8 bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden">
+    <div class="lg:col-span-8 bg-white border border-slate-200 rounded-4xl shadow-sm overflow-hidden">
       <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
         <h3 class="font-black text-slate-900 text-sm uppercase tracking-widest">Active Portfolio</h3>
         <button class="text-[10px] font-black text-blue-600 uppercase">View All</button>
@@ -68,51 +74,186 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-100">
+            @for (item of stats.active_portfolio; track item.id) {
             <tr class="hover:bg-slate-50/50 transition-colors cursor-pointer group">
-              <td class="px-8 py-5">
-                <div class="flex items-center gap-3 font-bold text-slate-900">
-                  <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </div>
-                  Alpha AI Growth
+              <td class="px-8 py-5 font-bold text-slate-900">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">...</div>
+                  {{ item.plan_name }}
                 </div>
               </td>
               <td class="px-8 py-5">
-                <span class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded uppercase">Active</span>
+                <span
+                  class="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded uppercase">Active</span>
               </td>
-              <td class="px-8 py-5 text-sm font-bold text-slate-700">$250.00</td>
-              <td class="px-8 py-5 text-right font-black text-emerald-500">+$12.40</td>
+              <td class="px-8 py-5 text-sm font-bold text-slate-700">{{ item.capital | currency }}</td>
+              <td class="px-8 py-5 text-right font-black text-emerald-500">+{{ item.profit | currency }}</td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
 
-    <div class="lg:col-span-4 bg-white border border-slate-200 rounded-[2rem] shadow-sm p-8">
+    <div class="lg:col-span-4 bg-white border border-slate-200 rounded-4xl shadow-sm p-8">
       <h3 class="font-black text-slate-900 text-sm uppercase tracking-widest mb-8">Recent Activity</h3>
       <div class="space-y-8 relative">
         <div class="absolute left-4 top-0 bottom-0 w-px bg-slate-100"></div>
-        
+        @for (activity of stats.recent_activity; track activity.id) {
         <div class="flex items-start gap-6 relative">
-          <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0 z-10">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center z-10">
           </div>
           <div>
-            <p class="text-xs font-black text-slate-900">Capital Received</p>
-            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Jan 26 • $500.00 Credit</p>
+            <p class="text-xs font-black text-slate-900">{{ activity.title }}</p>
+            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">{{ activity.date | date:'MMM d' }} • {{
+              activity.amount | currency }} {{ activity.type }}</p>
           </div>
         </div>
-
-        <div class="flex items-start gap-6 relative">
-          <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0 z-10">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div>
-            <p class="text-xs font-black text-slate-900">Plan Allocated</p>
-            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">Jan 25 • $250.00 Debit</p>
-          </div>
-        </div>
+        }
       </div>
     </div>
   </div>
 </div>
+}
+
+
+@if (isDepositModalOpen) {
+<div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative">
+
+    <div
+      class="absolute top-8 right-8 px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+      Expires in {{ remainingTime }}
+    </div>
+
+    @if (depositStep === 1) {
+    <h2 class="text-2xl font-black text-slate-900 mb-2">Select Asset</h2>
+    <p class="text-slate-500 text-xs mb-6">Choose the network you wish to fund with.</p>
+
+    <div class="space-y-3 mb-8">
+      @for (w of (treasuryMethods$ | async); track w.id) {
+      <div (click)="selectedWallet = w; depositStep = 2"
+        class="p-4 border-2 rounded-2xl cursor-pointer transition-all hover:border-blue-600 border-slate-100 flex justify-between items-center">
+        <div>
+          <p class="font-black text-slate-900">{{ w.asset_name }}</p>
+          <p class="text-[10px] font-bold text-blue-500 uppercase">{{ w.network }}</p>
+        </div>
+        <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M9 5l7 7-7 7" stroke-width="3" />
+        </svg>
+      </div>
+      }
+    </div>
+    <button (click)="closeDepositModal()"
+      class="w-full py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">
+      Cancel & Close
+    </button>
+    }
+
+    @if (depositStep === 2) {
+    <h2 class="text-2xl font-black text-slate-900 mb-2">Confirm Transfer</h2>
+    <p class="text-slate-500 text-xs mb-6">Send funds to the treasury address and provide details below.</p>
+
+    <div class="bg-blue-50 p-6 rounded-3xl space-y-4 mb-6 border border-blue-100">
+      <div>
+        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Treasury (Beneficiary)
+          Address</label>
+        <div class="flex items-center gap-2 mt-1">
+          <code class="text-xs font-mono break-all text-blue-900 font-bold">{{ selectedWallet.wallet_address }}</code>
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Amount to send ($)</label>
+        <input [(ngModel)]="depositAmount" type="number"
+          class="w-full bg-transparent text-2xl font-black focus:outline-none text-blue-900" placeholder="0.00">
+      </div>
+    </div>
+
+    <div class="space-y-4 mb-8">
+      <div>
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Source Wallet
+          Address</label>
+        <input [(ngModel)]="userSenderAddress" type="text"
+          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          placeholder="Address you are sending from">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Transaction Hash / Payment
+          Ref</label>
+        <input [(ngModel)]="userPaymentHash" type="text"
+          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          placeholder="Paste the txn hash here">
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <button (click)="confirmDeposit()" [disabled]="!depositAmount || !userPaymentHash || !userSenderAddress"
+        class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-30">
+        Confirm & Submit Transaction
+      </button>
+      <button (click)="depositStep = 1"
+        class="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest">Back</button>
+    </div>
+    }
+  </div>
+</div>
+}
+
+@if (isWithdrawModalOpen) {
+@if (stats$ | async; as stats) {
+<div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl">
+    <h2 class="text-2xl font-black text-slate-900 mb-2">Withdraw Capital</h2>
+    <p class="text-slate-500 text-xs mb-8">Transfer funds from your ledger to an external wallet.</p>
+
+    <form [formGroup]="withdrawForm" (ngSubmit)="onWithdrawSubmit(stats.ledger_balance)">
+      <div class="space-y-6">
+        <div class="p-4 bg-blue-50 rounded-2xl flex justify-between items-center">
+          <span class="text-[10px] font-black text-blue-600 uppercase">Available Balance</span>
+          <span class="font-black text-blue-700">{{ stats.ledger_balance | currency }}</span>
+        </div>
+
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Amount (USD)</label>
+          <input formControlName="amount" type="number"
+            class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 transition-all"
+            placeholder="0.00">
+        </div>
+
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Withdrawal Method</label>
+          <select formControlName="method"
+            class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold outline-none">
+            <option value="Bitcoin">Bitcoin (BTC)</option>
+            <option value="Ethereum">Ethereum (ERC-20)</option>
+            <option value="USDT">USDT (TRC-20)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Wallet
+            Address</label>
+          <input formControlName="wallet_address" type="text"
+            class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold"
+            placeholder="Enter destination address">
+        </div>
+
+        <div class="pt-4 flex flex-col gap-3">
+          <button type="submit" [disabled]="withdrawForm.invalid"
+            class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all disabled:opacity-50">
+            Confirm Withdrawal
+          </button>
+          <button type="button" (click)="isWithdrawModalOpen = false"
+            class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+}
+}
