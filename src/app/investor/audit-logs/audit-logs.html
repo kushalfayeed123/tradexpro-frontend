@@ -1,0 +1,48 @@
+<div class="space-y-6">
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-2xl font-black text-slate-900 tracking-tight">Ledger Audit</h1>
+      <p class="text-slate-500 text-xs font-medium">Verified double-entry records for your account.</p>
+    </div>
+    <button class="p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all">
+       <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+    </button>
+  </div>
+
+  <div class="bg-white rounded-[2rem] border border-slate-200 shadow-sm overflow-hidden">
+    <table class="w-full text-left border-collapse">
+      <thead class="bg-slate-50/50">
+        <tr>
+          <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Timestamp</th>
+          <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Ledger Entry ID</th>
+          <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Type</th>
+          <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Amount</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        <tr class="hover:bg-slate-50/30 transition-colors">
+          <td class="px-8 py-5 text-xs font-bold text-slate-500">Jan 26, 2026 14:22</td>
+          <td class="px-8 py-5 font-mono text-[11px] text-blue-600">8d2f-4c12-99a1</td>
+          <td class="px-8 py-5">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-black text-slate-700 uppercase">Credit (Return)</span>
+            </div>
+          </td>
+          <td class="px-8 py-5 text-right font-black text-emerald-600">+$42.50</td>
+        </tr>
+        <tr class="hover:bg-slate-50/30 transition-colors">
+          <td class="px-8 py-5 text-xs font-bold text-slate-500">Jan 25, 2026 09:10</td>
+          <td class="px-8 py-5 font-mono text-[11px] text-blue-600">3a1b-9d44-22b8</td>
+          <td class="px-8 py-5">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+              <span class="text-xs font-black text-slate-700 uppercase">Debit (Invest)</span>
+            </div>
+          </td>
+          <td class="px-8 py-5 text-right font-black text-slate-900">-$1,000.00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

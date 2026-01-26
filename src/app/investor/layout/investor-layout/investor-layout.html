@@ -1,1 +1,11 @@
-<router-outlet></router-outlet>
+<div class="min-h-screen bg-slate-50 flex">
+  <app-sidebar></app-sidebar>
+
+  <div class="flex-1 lg:pl-72 flex flex-col">
+    <app-topnav></app-topnav>
+
+    <main class="p-6 lg:p-10">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
