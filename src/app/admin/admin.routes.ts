@@ -12,6 +12,7 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'investments', loadComponent: () => import('./pages/investments/investments').then(m => m.Investments) },
       { path: 'plans', loadComponent: () => import('./pages/investment-plans/investment-plans').then(m => m.InvestmentPlans) },
       { path: 'transactions', loadComponent: () => import('./pages/transactions/transactions').then(m => m.Transactions) },
+      { path: 'settings', loadComponent: () => import('./pages/settings/settings').then(m => m.Settings) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

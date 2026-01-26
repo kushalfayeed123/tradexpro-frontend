@@ -11,6 +11,7 @@ import { UsersState } from './admin/pages/users/state/users.state';
 import { TransactionsState } from './admin/pages/transactions/state/transaction.state';
 import { InvestmentPlansState } from './admin/pages/investment-plans/state/investment-plans.state';
 import { InvestmentState } from './admin/pages/investments/state/investments.state';
+import { SettingsState } from './admin/pages/settings/state/settings.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -21,7 +22,7 @@ export const appConfig: ApplicationConfig = {
     ),
 
     importProvidersFrom(
-      NgxsModule.forRoot([AuthState, UsersState, TransactionsState, InvestmentPlansState, InvestmentState], {
+      NgxsModule.forRoot([AuthState, UsersState, TransactionsState, InvestmentPlansState, InvestmentState, SettingsState], {
         developmentMode: true,
       }),
 
