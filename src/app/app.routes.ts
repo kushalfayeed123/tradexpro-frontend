@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
 import { Auth } from './auth/auth';
 import { authGuard, adminGuard, loginGuard } from './core/guards/auth.guard';
+import { Home } from './site/pages/home/home';
 
 export const routes: Routes = [
   { path: 'login', component: Auth, canActivate: [loginGuard] },
+  { path: 'home', component: Home, },
   {
     path: 'admin',
     canActivate: [authGuard, adminGuard],
@@ -16,5 +18,5 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./investor/investor-routes').then(m => m.INVESTOR_ROUTES),
   },
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
 ];
