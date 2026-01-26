@@ -14,6 +14,8 @@ import { InvestmentState } from './admin/pages/investments/state/investments.sta
 import { SettingsState } from './admin/pages/settings/state/settings.state';
 import { OverviewState } from './investor/dashboard/state/overview.state';
 import { InvestorTransactionState } from './investor/wallets/state/transactions/transactions.state';
+import { ExploreInvestmentState } from './investor/explore-plans/state/explore-investment.state';
+import { MyInvestmentsState } from './investor/investments/state/user-investment.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,7 +26,17 @@ export const appConfig: ApplicationConfig = {
     ),
 
     importProvidersFrom(
-      NgxsModule.forRoot([AuthState, UsersState, TransactionsState, InvestmentPlansState, InvestmentState, SettingsState, OverviewState, TransactionsState, InvestorTransactionState], {
+      NgxsModule.forRoot([AuthState,
+        UsersState,
+        TransactionsState,
+        InvestmentPlansState,
+        InvestmentState,
+        SettingsState,
+        OverviewState,
+        TransactionsState,
+        InvestorTransactionState,
+        ExploreInvestmentState,
+        MyInvestmentsState], {
         developmentMode: true,
       }),
 

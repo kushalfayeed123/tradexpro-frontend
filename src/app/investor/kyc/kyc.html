@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto space-y-8">
+<!-- <div class="max-w-3xl mx-auto space-y-8">
   <div class="text-center">
     <h2 class="text-3xl font-black text-slate-900">Identity Center</h2>
     <p class="text-slate-500 mt-2">Compliance level: <span class="text-blue-600 font-bold">Level 1 (Tier 1 Limits)</span></p>
@@ -40,6 +40,62 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
         </button>
       </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="min-h-[80vh] flex items-center justify-center p-6">
+  <div class="max-w-2xl w-full text-center relative">
+
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/10 rounded-full blur-[100px] -z-10 animate-pulse">
+    </div>
+
+    <div
+      class="mb-10 inline-flex items-center justify-center w-20 h-20 bg-slate-50 border border-slate-100 rounded-[2rem] shadow-sm animate-bounce duration-[3000ms]">
+      <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+      </svg>
+    </div>
+
+    <h1 class="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4">
+      Advancing Your <br />
+      <span class="text-blue-600">Financial Frontier</span>
+    </h1>
+    <p class="text-slate-500 text-sm md:text-base font-medium max-w-md mx-auto mb-10 leading-relaxed">
+      We're currently engineering a more powerful way for you to manage this asset class. This module will be live
+      shortly.
+    </p>
+
+    <div class="max-w-xs mx-auto mb-10">
+      <div class="flex justify-between items-end mb-2">
+        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Development Progress</span>
+        <span class="text-xs font-black text-blue-600">85%</span>
+      </div>
+      <div class="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+        <div class="h-full bg-blue-600 rounded-full w-[85%] animate-in slide-in-from-left duration-1000"></div>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <button (click)="goBack()"
+        class="px-8 py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-slate-900/20">
+        Return to Dashboard
+      </button>
+      <button
+        class="px-8 py-4 bg-white border border-slate-200 text-slate-600 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-slate-50 transition-all">
+        Contact Support
+      </button>
+    </div>
+
+    <div class="mt-16 flex items-center justify-center gap-3">
+      <div class="flex -space-x-2">
+        <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-200"></div>
+        <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-300"></div>
+        <div class="w-6 h-6 rounded-full border-2 border-white bg-slate-400"></div>
+      </div>
+      <p class="text-[10px] font-bold text-slate-400 uppercase italic">Join 1,200+ investors awaiting this release</p>
     </div>
   </div>
 </div>

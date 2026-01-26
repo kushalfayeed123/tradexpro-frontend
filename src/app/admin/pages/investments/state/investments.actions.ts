@@ -12,5 +12,5 @@ export class MatureInvestment {
 
 export class UpdateAccruedReturn {
   static readonly type = '[Investments] Update Accrued Return';
-  constructor(public investment_id: string, public accrued_return: number) {}
+  constructor(public payload: any) {}
 }

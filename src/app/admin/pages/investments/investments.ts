@@ -4,21 +4,41 @@ import { Table } from '../../../common/components/table/table';
 import { Store } from '@ngxs/store';
 
 import { map, Observable, BehaviorSubject, combineLatest } from 'rxjs';
-import { FetchAllInvestments, MatureInvestment } from './state/investments.actions';
+import { FetchAllInvestments, MatureInvestment, UpdateAccruedReturn } from './state/investments.actions';
 import { InvestmentState } from './state/investments.state';
+import { FormsModule } from '@angular/forms';
+import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
   selector: 'app-investments',
   standalone: true,
-  imports: [CommonModule, Table],
+  imports: [CommonModule, Table, FormsModule],
   templateUrl: './investments.html',
 })
 export class Investments implements OnInit {
   private store = inject(Store);
+  private notify = inject(NotificationService);
 
   // Use a Subject for the filter to make the stream reactive
   private filter$ = new BehaviorSubject<string>('all');
   activeFilter = 'all';
+
+  isEditModalOpen = false;
+  selectedInvestment: any = null;
+  newProfitValue: number = 0;
+
+  openEditProfit(inv: any) {
+    this.selectedInvestment = inv;
+    this.newProfitValue = inv.accrued_return;
+    this.isEditModalOpen = true;
+  }
+
+  onSaveProfit() {
+    this.store.dispatch(new UpdateAccruedReturn({
+      investment_id: this.selectedInvestment.id,
+      accrued_return: this.newProfitValue
+    })).subscribe(() => this.isEditModalOpen = false);
+  }
 
   // 1. Reactive stream for the table data
   investments$ = combineLatest([
@@ -50,8 +70,9 @@ export class Investments implements OnInit {
 
 
 
-  onMature(id: string) {
-    if (confirm('Confirm maturity?')) {
+  async onMature(id: string) {
+    const confirm = await this.notify.confirm('Confirm Investment Maturity', 'Are you sure you want to mark this investment as matured? This will credit the investors wallet.', 'Confirm')
+    if (confirm) {
       this.store.dispatch(new MatureInvestment(id));
     }
   }
@@ -62,20 +83,20 @@ export class Investments implements OnInit {
     return Math.min(Math.max(Math.round((current / total) * 100), 0), 100);
   }
   // investments.ts
-setFilter(val: string) {
-  this.activeFilter = val;
-  // Now passing an object that matches 'InvestmentParams'
-  this.store.dispatch(new FetchAllInvestments({ 
-    page: 1, 
-    status: val 
-  }));
-}
+  setFilter(val: string) {
+    this.activeFilter = val;
+    // Now passing an object that matches 'InvestmentParams'
+    this.store.dispatch(new FetchAllInvestments({
+      page: 1,
+      status: val
+    }));
+  }
 
-onPageChange(page: number) {
-  this.store.dispatch(new FetchAllInvestments({ 
-    page, 
-    status: this.activeFilter 
-  }));
-}
+  onPageChange(page: number) {
+    this.store.dispatch(new FetchAllInvestments({
+      page,
+      status: this.activeFilter
+    }));
+  }
 
 }

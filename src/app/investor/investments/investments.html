@@ -1,18 +1,33 @@
 <div class="space-y-10 animate-in fade-in duration-500">
-  <header>
-    <h1 class="text-3xl font-black text-slate-900 tracking-tight">Active Portfolio</h1>
-    <p class="text-slate-500 text-sm font-medium">Tracking your active capital deployments and maturity dates.</p>
+  <header class="flex justify-between items-end">
+    <div>
+      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Active Portfolio</h1>
+      <p class="text-slate-500 text-sm font-medium">Tracking your active capital deployments and maturity dates.</p>
+    </div>
+    
+    @if (loading$ | async) {
+      <div class="flex items-center gap-2 text-blue-600">
+        <div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>
+        <span class="text-[10px] font-black uppercase tracking-widest">Updating Ledger...</span>
+      </div>
+    }
   </header>
 
   <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-    <div class="bg-white p-6 rounded-3xl border border-slate-200">
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Principal</p>
-      <p class="text-2xl font-black text-slate-900">$4,500.00</p>
-    </div>
-    <div class="bg-white p-6 rounded-3xl border border-slate-200">
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Accrued Return</p>
-      <p class="text-2xl font-black text-emerald-500">+$240.15</p>
-    </div>
+    @if (investments$ | async; as items) {
+      <div class="bg-white p-6 rounded-3xl border border-slate-200">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Principal</p>
+        <p class="text-2xl font-black text-slate-900">
+          {{ getTotalPrincipal(items) | currency }}
+        </p>
+      </div>
+      <div class="bg-white p-6 rounded-3xl border border-slate-200">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Accrued Return</p>
+        <p class="text-2xl font-black text-emerald-500">
+          +{{ getTotalReturns(items) | currency }}
+        </p>
+      </div>
+    }
   </div>
 
   <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
@@ -27,18 +42,39 @@
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-50 text-sm">
-        <tr class="hover:bg-slate-50/50 transition-colors">
-          <td class="px-8 py-6">
-            <div class="font-bold text-slate-900">Enterprise AI Plan</div>
-            <div class="text-[10px] text-slate-400 uppercase font-black">Ref: INV-8273</div>
-          </td>
-          <td class="px-8 py-6 font-semibold text-slate-700">$2,500.00</td>
-          <td class="px-8 py-6 font-black text-emerald-500">+$120.00</td>
-          <td class="px-8 py-6">
-            <span class="px-3 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-black rounded-lg uppercase">Active</span>
-          </td>
-          <td class="px-8 py-6 text-slate-500 font-medium tracking-tight">Nov 12, 2026</td>
-        </tr>
+        @for (inv of (investments$ | async); track inv.id) {
+          <tr class="hover:bg-slate-50/50 transition-colors group">
+            <td class="px-8 py-6">
+              <div class="font-bold text-slate-900">{{ inv.investment_plans?.name || 'Standard Plan' }}</div>
+              <div class="text-[10px] text-slate-400 uppercase font-black tracking-tighter">
+                Ref: {{ inv.id.substring(0, 8) }}
+              </div>
+            </td>
+            <td class="px-8 py-6 font-semibold text-slate-700">
+              {{ inv.principal | currency }}
+            </td>
+            <td class="px-8 py-6 font-black text-emerald-500">
+              +{{ inv.accrued_return | currency }}
+            </td>
+            <td class="px-8 py-6">
+              <span [ngClass]="{
+                'bg-emerald-50 text-emerald-600': inv.status === 'active',
+                'bg-blue-50 text-blue-600': inv.status === 'matured'
+              }" class="px-3 py-1 text-[10px] font-black rounded-lg uppercase tracking-tighter">
+                {{ inv.status }}
+              </span>
+            </td>
+            <td class="px-8 py-6 text-slate-500 font-medium tracking-tight">
+              {{ inv.end_date | date:'MMM d, y' }}
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="5" class="px-8 py-20 text-center">
+              <p class="text-slate-400 font-medium italic">No active deployments found.</p>
+            </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>

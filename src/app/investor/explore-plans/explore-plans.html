@@ -1,41 +1,103 @@
-<div class="space-y-8 max-w-7xl mx-auto">
-  <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+<div class="p-8 max-w-7xl mx-auto space-y-10">
+  <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
     <div>
-      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Investment Plans</h1>
-      <p class="text-slate-500 text-sm font-medium italic">Select a strategy backed by our secure ledger system.</p>
+      <h1 class="text-4xl font-black text-slate-900 tracking-tight">Investment Plans</h1>
+      <p class="text-slate-500 mt-1 italic">Secure, ledger-backed growth strategies.</p>
     </div>
-  </div>
+
+    <div class="bg-white border-2 border-blue-50 p-4 px-8 rounded-[2rem] shadow-sm flex items-center gap-4">
+      <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-width="2"
+            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+        </svg>
+      </div>
+      <div>
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Available Ledger</p>
+        <p class="text-xl font-black text-blue-600">{{ (stats$ | async)?.ledger_balance | currency }}</p>
+      </div>
+    </div>
+  </header>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    <div class="bg-white border border-slate-200 rounded-[2.5rem] p-8 flex flex-col shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
-      <div class="flex justify-between items-start mb-6">
-        <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+    @for (plan of (plans$ | async); track plan.id) {
+    <div
+      class="bg-white border-2 border-slate-100 rounded-[2.5rem] p-8 transition-all hover:border-blue-500 hover:shadow-2xl group">
+      <div class="flex justify-between mb-8">
+        <div
+          class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
         </div>
-        <span class="px-3 py-1 bg-blue-50 text-blue-700 text-[10px] font-black rounded-full uppercase tracking-widest">Active</span>
-      </div>
-
-      <h3 class="text-2xl font-black text-slate-900 mb-2">Standard Plan</h3>
-      <p class="text-slate-500 text-xs leading-relaxed mb-8">Baseline high-yield strategy with daily compounding returns.</p>
-
-      <div class="space-y-4 mb-8">
-        <div class="flex justify-between py-2 border-b border-slate-50">
-          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Min / Max</span>
-          <span class="text-sm font-bold text-slate-900">$100 — $5,000</span>
-        </div>
-        <div class="flex justify-between py-2 border-b border-slate-50">
-          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Duration</span>
-          <span class="text-sm font-bold text-slate-900">30 Days</span>
-        </div>
-        <div class="flex justify-between py-2 border-b border-slate-50">
-          <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">ROI Rate</span>
-          <span class="text-sm font-black text-emerald-500">12.5%</span>
+        <div class="text-right">
+          <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Expected ROI</p>
+          <p class="text-2xl font-black text-emerald-500">{{ plan.interest_rate }}%</p>
         </div>
       </div>
 
-      <button class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all active:scale-95 shadow-lg shadow-slate-200">
-        Invest Capital
+      <h3 class="text-xl font-black text-slate-900 mb-2">{{ plan.name }}</h3>
+      <p class="text-slate-500 text-xs leading-relaxed mb-8">{{ plan.description }}</p>
+
+      <div class="space-y-3 mb-8">
+        <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+          <span class="text-[10px] font-bold text-slate-400 uppercase">Term</span>
+          <span class="text-sm font-black text-slate-900">{{ plan.duration_days }} Days</span>
+        </div>
+        <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+          <span class="text-[10px] font-bold text-slate-400 uppercase">Range</span>
+          <span class="text-sm font-black text-slate-900">${{ plan.min_amount }} - ${{ plan.max_amount }}</span>
+        </div>
+      </div>
+
+      <button (click)="openInvestModal(plan)"
+        class="w-full py-4 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all shadow-lg shadow-slate-100">
+        Invest Now
       </button>
     </div>
-    </div>
+    }
+  </div>
 </div>
+
+@if (isModalOpen) {
+<div class="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200">
+    <h2 class="text-2xl font-black text-slate-900 mb-1">Confirm Stake</h2>
+    <p class="text-slate-500 text-xs mb-8">Enter the amount you wish to commit to <b>{{ selectedPlan.name }}</b>.</p>
+
+    <div class="flex justify-between items-center mb-4 px-2">
+      <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Your Balance</span>
+      <span class="text-xs font-black text-slate-900">{{ (stats$ | async)?.ledger_balance | currency }}</span>
+    </div>
+
+    <div class="bg-blue-50 p-6 rounded-3xl border border-blue-100 mb-8">
+      <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Amount to Invest ($)</label>
+      <input [(ngModel)]="investAmount" type="number"
+        class="w-full bg-transparent text-4xl font-black focus:outline-none text-blue-900 mt-2"
+        [placeholder]="selectedPlan.min_amount">
+    </div>
+
+    <div class="flex flex-col gap-3">
+      @if (stats$ | async; as s) {
+      <button (click)="confirmInvestment()"
+        [disabled]="(loading$ | async) || investAmount < selectedPlan?.min_amount || investAmount > s.ledger_balance"
+        class="w-full py-4 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all disabled:opacity-30">
+        {{ (loading$ | async) ? 'Processing...' : 'Confirm Investment' }}
+      </button>
+
+      @if (investAmount > s.ledger_balance) {
+      <p class="text-center text-rose-500 text-[10px] font-bold mt-4 uppercase tracking-tighter italic">
+        Insufficient ledger balance
+      </p>
+      }
+      }
+
+      <button (click)="isModalOpen = false"
+        class="text-[10px] font-black text-slate-400 uppercase tracking-widest py-2">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+}

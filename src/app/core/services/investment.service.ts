@@ -33,6 +33,15 @@ export class InvestmentsService {
   }
 
   updateReturn(dto: { investment_id: string, accrued_return: number }) {
-    return this.http.patch(`${this.API_URL}/accrued-return`, dto);
+    return this.http.patch(`${this.API_URL}/return`, dto);
+  }
+
+
+  createInvestment(payload: any) {
+    return this.http.post(`${this.API_URL}`, payload);
+  }
+  
+  getUserInvestments() {
+    return this.http.get(`${this.API_URL}/me`);
   }
 }
