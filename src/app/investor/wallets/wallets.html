@@ -112,42 +112,106 @@
 </div>
 
 @if (isDepositModalOpen) {
-<div class="fixed inset-0 z-100 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
-  <div class="bg-white w-full max-w-lg rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200">
+<div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative">
 
-    <div class="flex justify-between items-start mb-8">
-      <div>
-        <h2 class="text-2xl font-black text-slate-900 mb-1">
-          {{ depositStep === 1 ? 'Fund Wallet' : 'Finalize Transfer' }}
-        </h2>
-        <p class="text-slate-500 text-xs">
-          {{ depositStep === 1 ? 'Select gateway and amount.' : 'Provide payment proof to clear funds.' }}
-        </p>
-      </div>
-      <div class="flex flex-col items-end gap-2">
-        <button (click)="closeDepositModal()" class="text-slate-400 hover:text-rose-500 transition-colors">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <div class="bg-rose-50 text-rose-600 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
-          {{ remainingTime }}
-        </div>
-      </div>
+    <div
+      class="absolute top-8 right-8 px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+      Expires in {{ remainingTime }}
     </div>
 
     @if (depositStep === 1) {
-    <div class="space-y-6">
-      <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Amount to Deposit
-          (USD)</label>
-        <input type="number" [(ngModel)]="depositAmount"
-          class="w-full bg-transparent text-4xl font-black text-slate-900 outline-none" placeholder="0.00">
+    <h2 class="text-2xl font-black text-slate-900 mb-2">Select Asset</h2>
+    <p class="text-slate-500 text-xs mb-6">Choose the network you wish to fund with.</p>
+
+    <div class="space-y-3 mb-8">
+      @for (w of (treasuryMethods$ | async); track w.id) {
+      <div (click)="selectedWallet = w; depositStep = 2"
+        class="p-4 border-2 rounded-2xl cursor-pointer transition-all hover:border-blue-600 border-slate-100 flex justify-between items-center">
+        <div>
+          <p class="font-black text-slate-900">{{ w.asset_name }}</p>
+          <p class="text-[10px] font-bold text-blue-500 uppercase">{{ w.network }}</p>
+        </div>
+        <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M9 5l7 7-7 7" stroke-width="3" />
+        </svg>
+      </div>
+      }
+    </div>
+    <button (click)="closeDepositModal()"
+      class="w-full py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">
+      Cancel & Close
+    </button>
+    }
+
+    @if (depositStep === 2) {
+    <h2 class="text-2xl font-black text-slate-900 mb-2">Confirm Transfer</h2>
+    <p class="text-slate-500 text-xs mb-6">Send funds to the wallet address and provide details below.</p>
+
+    <div class="bg-blue-50 p-6 rounded-3xl space-y-4 mb-6 border border-blue-100">
+      <div>
+        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Treasury (Beneficiary)
+          Address</label>
+        <div class="flex items-center gap-2 mt-1">
+          <code class="text-xs font-mono break-all text-blue-900 font-bold">{{ selectedWallet.wallet_address }}</code>
+        </div>
       </div>
 
+      <div>
+        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Amount to send ($)</label>
+        <input [(ngModel)]="depositAmount" type="number"
+          class="w-full bg-transparent text-2xl font-black focus:outline-none text-blue-900" placeholder="0.00">
+      </div>
+    </div>
+
+    <div class="space-y-4 mb-8">
+      <div>
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Source Wallet
+          Address</label>
+        <input [(ngModel)]="userSenderAddress" type="text"
+          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          placeholder="Address you are sending from">
+      </div>
+
+      <div>
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Transaction Hash / Payment
+          Ref</label>
+        <input [(ngModel)]="userPaymentHash" type="text"
+          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          placeholder="Paste the txn hash here">
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <button (click)="confirmDeposit()" [disabled]="!depositAmount || !userPaymentHash || !userSenderAddress"
+        class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-30">
+        Confirm & Submit Transaction
+      </button>
+      <button (click)="depositStep = 1"
+        class="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest">Back</button>
+    </div>
+    }
+  </div>
+</div>
+}
+@if (isWithdrawModalOpen) {
+<div class="fixed inset-0 z-100 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
+  <div class="bg-white w-full max-w-md rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200">
+    <h2 class="text-2xl font-black text-slate-900 mb-1">Withdraw Capital</h2>
+    <p class="text-slate-500 text-xs mb-8">Move funds from your ledger to your external wallet.</p>
+
+    <form [formGroup]="withdrawForm" (ngSubmit)="onWithdrawSubmit()" class="space-y-6">
+      <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Amount to
+          Withdraw</label>
+        <input type="number" formControlName="amount"
+          class="w-full bg-transparent text-4xl font-black text-slate-900 outline-none">
+      </div>
+
+
       <div class="relative">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Payment
-          Gateway</label>
+        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Select Payment
+          Method</label>
         <button type="button" (click)="toggleDropdown()"
           class="w-full p-5 bg-white border-2 border-slate-100 rounded-2xl flex justify-between items-center hover:border-blue-200 transition-all">
           @if (selectedWallet) {
@@ -179,69 +243,6 @@
           }
         </div>
         }
-      </div>
-
-      <button (click)="depositStep = 2" [disabled]="!selectedWallet || depositAmount <= 0"
-        class="w-full py-5 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-20 shadow-xl shadow-slate-900/10">
-        Continue to Payment
-      </button>
-    </div>
-    }
-
-    @if (depositStep === 2) {
-    <div class="space-y-6">
-      <div class="p-6 bg-blue-50 rounded-3xl border border-blue-100 text-center">
-        <p class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-2">Send {{ depositAmount | currency
-          }} to:</p>
-        <p class="text-sm font-mono font-bold text-blue-900 mb-2 break-all">{{ selectedWallet.wallet_address }}</p>
-        <button (click)="copyAddress(selectedWallet.wallet_address)"
-          class="text-[9px] font-black text-blue-600 uppercase tracking-widest hover:underline">Copy Address</button>
-      </div>
-
-      <div class="space-y-4">
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Your Transaction
-            Hash (TXID)</label>
-          <input [(ngModel)]="userPaymentHash"
-            class="w-full bg-transparent text-sm font-mono font-bold text-slate-900 outline-none"
-            placeholder="Paste blockchain hash...">
-        </div>
-
-        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Your Sender Wallet
-            Address</label>
-          <input [(ngModel)]="userSenderAddress"
-            class="w-full bg-transparent text-sm font-mono font-bold text-slate-900 outline-none"
-            placeholder="The address you sent from...">
-        </div>
-      </div>
-
-      <div class="flex flex-col gap-2 pt-2">
-        <button (click)="confirmDeposit()" [disabled]="!userPaymentHash || !userSenderAddress"
-          class="w-full py-5 bg-blue-600 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-700 transition-all shadow-xl shadow-blue-600/20 disabled:opacity-20">
-          Confirm Payment Sent
-        </button>
-        <button (click)="depositStep = 1" class="text-[10px] font-black text-slate-400 uppercase py-2 text-center">Go
-          Back & Edit</button>
-      </div>
-    </div>
-    }
-  </div>
-</div>
-}
-
-@if (isWithdrawModalOpen) {
-<div class="fixed inset-0 z-100 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
-  <div class="bg-white w-full max-w-md rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200">
-    <h2 class="text-2xl font-black text-slate-900 mb-1">Withdraw Capital</h2>
-    <p class="text-slate-500 text-xs mb-8">Move funds from your ledger to your external wallet.</p>
-
-    <form [formGroup]="withdrawForm" (ngSubmit)="onWithdrawSubmit()" class="space-y-6">
-      <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Amount to
-          Withdraw</label>
-        <input type="number" formControlName="amount"
-          class="w-full bg-transparent text-4xl font-black text-slate-900 outline-none">
       </div>
 
       <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">

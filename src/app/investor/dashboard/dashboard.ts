@@ -46,9 +46,22 @@ export class Dashboard implements OnInit {
     method: ['Bitcoin', Validators.required]
   });
 
+  isDropdownOpen = false;
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  selectMethod(method: any) {
+    this.withdrawForm.value.method = method;
+    this.selectedWallet = method
+    this.isDropdownOpen = false;
+  }
 
 
   openWithdrawModal() {
+    this.store.dispatch(new LoadActiveDepositMethods());
+
     this.isWithdrawModalOpen = true;
   }
 
@@ -70,9 +83,9 @@ export class Dashboard implements OnInit {
       amount: amount,
       type: 'withdrawal',
       reference: this.generateReference('with'),
-      description: `Funds withdrawal via ${this.withdrawForm.value.method}`,
+      description: `Funds withdrawal via ${this.selectedWallet.asset_name}`,
       beneficiary_address: this.withdrawForm.value.wallet_address, // User's destination
-      payment_method: this.withdrawForm.value.method,
+      payment_method: this.selectedWallet.asset_name,
       sender_address: userWalletId, // Internal source
       txn_hash: '',
       wallet_id: userWalletId

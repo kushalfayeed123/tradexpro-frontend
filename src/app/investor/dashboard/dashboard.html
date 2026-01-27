@@ -224,14 +224,40 @@
             placeholder="0.00">
         </div>
 
-        <div>
-          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Withdrawal Method</label>
-          <select formControlName="method"
-            class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold outline-none">
-            <option value="Bitcoin">Bitcoin (BTC)</option>
-            <option value="Ethereum">Ethereum (ERC-20)</option>
-            <option value="USDT">USDT (TRC-20)</option>
-          </select>
+        <div class="relative">
+          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Select Payment
+            Method</label>
+          <button type="button" (click)="toggleDropdown()"
+            class="w-full p-5 bg-white border-2 border-slate-100 rounded-2xl flex justify-between items-center hover:border-blue-200 transition-all">
+            @if (selectedWallet) {
+            <div class="text-left">
+              <p class="text-xs font-black text-slate-900 uppercase">{{ selectedWallet.asset_name }}</p>
+              <p class="text-[10px] text-slate-400 font-bold uppercase">{{ selectedWallet.network }}</p>
+            </div>
+            } @else {
+            <span class="text-xs font-bold text-slate-400">Choose a method...</span>
+            }
+            <svg class="w-5 h-5 text-slate-400 transition-transform" [class.rotate-180]="isDropdownOpen" fill="none"
+              stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          @if (isDropdownOpen) {
+          <div
+            class="absolute z-20 top-full mt-2 w-full bg-white border border-slate-100 rounded-2xl shadow-xl overflow-hidden">
+            @for (method of (treasuryMethods$ | async); track method.id) {
+            <button (click)="selectMethod(method)"
+              class="w-full p-4 text-left hover:bg-slate-50 flex items-center justify-between group border-b border-slate-50 last:border-0">
+              <div>
+                <p class="text-xs font-black text-slate-900 uppercase group-hover:text-blue-600">{{ method.asset_name }}
+                </p>
+                <p class="text-[10px] text-slate-400 font-bold uppercase">{{ method.network }}</p>
+              </div>
+            </button>
+            }
+          </div>
+          }
         </div>
 
         <div>
