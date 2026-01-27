@@ -4,7 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { Store } from '@ngxs/store';
 import { LoadOverviewData, OverviewState } from '../dashboard/state/overview.state';
 import { Subscription, take, timer, map } from 'rxjs';
-import { LoadDepositMethods } from '../../admin/pages/settings/state/settings.action';
+import { LoadActiveDepositMethods, LoadDepositMethods } from '../../admin/pages/settings/state/settings.action';
 import { SettingsState } from '../../admin/pages/settings/state/settings.state';
 import { AuthState } from '../../auth/state/auth.state';
 import { NotificationService } from '../../core/services/notification.service';
@@ -101,7 +101,7 @@ export class Wallets {
   startDeposit() {
     this.depositStep = 1;
     this.isDepositModalOpen = true;
-    this.store.dispatch(new LoadDepositMethods());
+    this.store.dispatch(new LoadActiveDepositMethods());
     this.startCountdown();
   }
 

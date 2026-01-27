@@ -82,6 +82,7 @@ export class Dashboard implements OnInit {
   startDeposit() {
     this.depositStep = 1;
     this.isDepositModalOpen = true;
+    this.store.dispatch(new LoadActiveDepositMethods());
     this.startCountdown();
   }
 
@@ -138,6 +139,5 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new LoadOverviewData());
-    this.store.dispatch(new LoadActiveDepositMethods())
   }
 }
