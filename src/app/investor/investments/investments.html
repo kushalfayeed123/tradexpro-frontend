@@ -45,7 +45,7 @@
         @for (inv of (investments$ | async); track inv.id) {
           <tr class="hover:bg-slate-50/50 transition-colors group">
             <td class="px-8 py-6">
-              <div class="font-bold text-slate-900">{{ inv.investment_plans?.name || 'Standard Plan' }}</div>
+              <div class="font-bold text-slate-900">{{ inv.plan?.name || 'Standard Plan' }}</div>
               <div class="text-[10px] text-slate-400 uppercase font-black tracking-tighter">
                 Ref: {{ inv.id.substring(0, 8) }}
               </div>
