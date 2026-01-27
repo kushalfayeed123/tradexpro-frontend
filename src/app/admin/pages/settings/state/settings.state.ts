@@ -4,17 +4,19 @@ import { tap } from "rxjs";
 import { SetLoading } from "../../../../auth/state/auth.actions";
 import { NotificationService } from "../../../../core/services/notification.service";
 import { DepositMethod, SettingsService } from "../../../../core/services/settings.service";
-import { LoadDepositMethods, AddDepositMethod, UpdateDepositMethod, DeleteDepositMethod } from "./settings.action";
+import { LoadDepositMethods, AddDepositMethod, UpdateDepositMethod, DeleteDepositMethod, LoadActiveDepositMethods } from "./settings.action";
 
 
 export interface SettingsStateModel {
     methods: DepositMethod[];
+    activeMethods: DepositMethod[];
     loading: boolean;
 }
 @State<SettingsStateModel>({
     name: 'treasury',
     defaults: {
         methods: [],
+        activeMethods: [],
         loading: false
     }
 })
@@ -25,6 +27,9 @@ export class SettingsState {
 
     @Selector()
     static getMethods(state: SettingsStateModel) { return state.methods || []; }
+
+    @Selector()
+    static getActiveMethods(state: SettingsStateModel) { return state.activeMethods || []; }
 
     @Selector()
     static activeCount(state: SettingsStateModel) {
@@ -39,6 +44,20 @@ export class SettingsState {
                 next: (res: any) => {
                     const methods = Array.isArray(res) ? res : res.data || [];
                     ctx.patchState({ methods, loading: false });
+                    ctx.dispatch(new SetLoading(false));
+                },
+                error: () => ctx.dispatch(new SetLoading(false))
+            })
+        );
+    }
+    @Action(LoadActiveDepositMethods)
+    loadActive(ctx: StateContext<SettingsStateModel>) {
+        ctx.dispatch(new SetLoading(true));
+        return this.api.getActiveMethods().pipe(
+            tap({
+                next: (res: any) => {
+                    const methods = Array.isArray(res) ? res : res.data || [];
+                    ctx.patchState({ activeMethods: methods, loading: false });
                     ctx.dispatch(new SetLoading(false));
                 },
                 error: () => ctx.dispatch(new SetLoading(false))

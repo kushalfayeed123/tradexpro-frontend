@@ -30,7 +30,7 @@ export class Wallets {
 
   // Selecting the entire stats object as an observable
   user$ = this.store.select(AuthState.user)
-  treasuryMethods$ = this.store.select(SettingsState.getMethods);
+  treasuryMethods$ = this.store.select(SettingsState.getActiveMethods);
   transactions$ = this.store.select(InvestorTransactionState.getTransactions)
 
   depositStep = 1;

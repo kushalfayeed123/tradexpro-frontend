@@ -3,6 +3,9 @@ import { DepositMethod } from "../../../../core/services/settings.service";
 export class LoadDepositMethods {
   static readonly type = '[Treasury] Load Methods';
 }
+export class LoadActiveDepositMethods {
+  static readonly type = '[Treasury] Load Active Methods';
+}
 
 export class AddDepositMethod {
   static readonly type = '[Treasury] Add Method';

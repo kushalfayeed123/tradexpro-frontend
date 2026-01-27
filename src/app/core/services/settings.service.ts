@@ -35,4 +35,9 @@ export class SettingsService {
   deleteMethod(id: string): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+
+  getActiveMethods(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/active`);
+  }
+
 }

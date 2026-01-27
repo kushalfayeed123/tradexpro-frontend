@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { LoadOverviewData } from './state/overview.actions';
 import { OverviewState } from './state/overview.state';
 import { map, Subscription, take, timer } from 'rxjs';
-import { LoadDepositMethods } from '../../admin/pages/settings/state/settings.action';
+import { LoadActiveDepositMethods, LoadDepositMethods } from '../../admin/pages/settings/state/settings.action';
 import { UsersState } from '../../admin/pages/users/state/users.state';
 import { AuthState } from '../../auth/state/auth.state';
 import { SettingsState } from '../../admin/pages/settings/state/settings.state';
@@ -26,7 +26,7 @@ export class Dashboard implements OnInit {
   // Selecting the entire stats object as an observable
   stats$ = this.store.select(OverviewState.getStats);
   user$ = this.store.select(AuthState.user)
-  treasuryMethods$ = this.store.select(SettingsState.getMethods);
+  treasuryMethods$ = this.store.select(SettingsState.getActiveMethods);
 
   depositStep = 1;
   isDepositModalOpen = false;
@@ -82,7 +82,6 @@ export class Dashboard implements OnInit {
   startDeposit() {
     this.depositStep = 1;
     this.isDepositModalOpen = true;
-    this.store.dispatch(new LoadDepositMethods());
     this.startCountdown();
   }
 
@@ -139,5 +138,6 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new LoadOverviewData());
+    this.store.dispatch(new LoadActiveDepositMethods())
   }
 }
