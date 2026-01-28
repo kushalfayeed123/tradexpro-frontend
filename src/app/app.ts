@@ -14,7 +14,7 @@ import { InitializeAuth } from './auth/state/auth.actions';
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'topequity5';
+  protected title = 'ProsperaFinWealth';
   private store = inject(Store);
   // Reactive loading state for the entire app
   isLoading$ = this.store.select(AuthState.isLoading);
