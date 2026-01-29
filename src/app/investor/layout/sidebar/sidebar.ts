@@ -11,12 +11,16 @@ import { NotificationService } from '../../../core/services/notification.service
   styleUrl: './sidebar.css',
 })
 export class Sidebar {
-    readonly currentYear = new Date().getFullYear();
+  readonly currentYear = new Date().getFullYear();
   private store = inject(Store);
   private notify = inject(NotificationService);
 
 
-  
+  isSidebarOpen = false;
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+  }
   async onLogout() {
     const confirmed = await this.notify.confirm(
       'Sign Out?',
