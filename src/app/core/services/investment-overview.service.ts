@@ -17,9 +17,14 @@ export interface DashboardStats {
 @Injectable({ providedIn: 'root' })
 export class OverviewService {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/overview`;
+  private readonly baseUrl = `${environment.apiUrl}`;
+
 
   getDashboardSummary(): Observable<DashboardStats> {
-    return this.http.get<DashboardStats>(`${this.baseUrl}/summary`);
+    return this.http.get<DashboardStats>(`${this.baseUrl}/overview/summary`);
   }
+  getAdminDashboardSummary(): Observable<any> {
+    return this.http.get<DashboardStats>(`${this.baseUrl}/admin/dashboard/summary`);
+  }
+
 }

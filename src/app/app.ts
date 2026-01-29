@@ -1,5 +1,5 @@
 import { Component, inject, PLATFORM_ID } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Toast } from './common/components/toast/toast';
 import { Store } from '@ngxs/store';
 import { AuthState } from './auth/state/auth.state';
@@ -16,11 +16,26 @@ import { InitializeAuth } from './auth/state/auth.actions';
 export class App {
   protected title = 'ProsperaFinWealth';
   private store = inject(Store);
+  private router = inject(Router);
   // Reactive loading state for the entire app
   isLoading$ = this.store.select(AuthState.isLoading);
 
 
   ngOnInit() {
-    this.store.dispatch(new InitializeAuth());
+    // 1. Rehydrate user data from server
+    this.store.dispatch(new InitializeAuth()).subscribe(() => {
+      const user = this.store.selectSnapshot(AuthState.user);
+
+      if (user) {
+        // 2. Only redirect IF the user is currently on the login or home page
+        const currentPath = window.location.pathname;
+        if (currentPath === '/login' || currentPath === '/' || currentPath === '/home') {
+          const dashboard = user.role === 'admin' ? '/admin/dashboard' : '/investor/dashboard';
+          this.router.navigate([dashboard]);
+        }
+        // If currentPath is /admin/kyc, we do NOTHING. 
+        // The router will naturally load the KYC component.
+      }
+    });
   }
 }

@@ -1,6 +1,6 @@
 import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withEnabledBlockingInitialNavigation, withViewTransitions } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 
@@ -16,11 +16,16 @@ import { OverviewState } from './investor/dashboard/state/overview.state';
 import { InvestorTransactionState } from './investor/wallets/state/transactions/transactions.state';
 import { ExploreInvestmentState } from './investor/explore-plans/state/explore-investment.state';
 import { MyInvestmentsState } from './investor/investments/state/user-investment.state';
+import { KycState } from './investor/kyc/state/kyc.state';
+import { AdminKycState } from './admin/pages/kyc/state/admin-kyc.state';
+import { AdminState } from './admin/pages/dashboard/state/dashboard.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
-    provideZonelessChangeDetection(), // This replaces the need for Zone.js
+    provideRouter(routes,
+      withEnabledBlockingInitialNavigation(), // Prevents flickering/redirects during boot
+      withViewTransitions()
+    ), provideZonelessChangeDetection(), // This replaces the need for Zone.js
 
     provideHttpClient(withFetch(), withInterceptors([authInterceptor])
     ),
@@ -36,7 +41,11 @@ export const appConfig: ApplicationConfig = {
         TransactionsState,
         InvestorTransactionState,
         ExploreInvestmentState,
-        MyInvestmentsState], {
+        MyInvestmentsState,
+        KycState,
+        AdminKycState,
+        AdminState
+      ], {
         developmentMode: true,
       }),
 

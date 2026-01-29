@@ -15,7 +15,7 @@ export interface DepositMethod {
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
-  private readonly baseUrl = `${environment.apiUrl}/settings`;
+  private readonly baseUrl = `${environment.apiUrl}/admin`;
 
   constructor(private http: HttpClient) {}
 
