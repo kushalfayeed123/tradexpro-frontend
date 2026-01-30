@@ -29,10 +29,11 @@ export class App {
       if (user) {
         // 2. Only redirect IF the user is currently on the login or home page
         const currentPath = window.location.pathname;
-        if (currentPath === '/login' || currentPath === '/' || currentPath === '/home') {
+        if (currentPath === '/login') {
           const dashboard = user.role === 'admin' ? '/admin/dashboard' : '/investor/dashboard';
           this.router.navigate([dashboard]);
         }
+         
         // If currentPath is /admin/kyc, we do NOTHING. 
         // The router will naturally load the KYC component.
       }

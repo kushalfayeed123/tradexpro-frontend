@@ -21,6 +21,9 @@ export class Sidebar {
   toggleSidebar() {
     this.isSidebarOpen = !this.isSidebarOpen;
   }
+
+    closeSidebar() { }
+
   async onLogout() {
     const confirmed = await this.notify.confirm(
       'Sign Out?',
