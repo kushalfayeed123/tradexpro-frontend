@@ -55,9 +55,9 @@ export class InvestorTransactionState {
                     ctx.dispatch(new SetLoading(false));
                     this.notify.show('Transaction submitted for review', 'success');
                 },
-                error: () => {
+                error: (err: any) => {
                     ctx.dispatch(new SetLoading(false));
-                    this.notify.show('An error occurred', 'error');
+                    this.notify.show(err.message, 'error');
 
                 }
             })
