@@ -1,14 +1,15 @@
-<div class="flex flex-col h-full space-y-6 p-6 bg-slate-50/50">
-  <div class="shrink-0 flex justify-between items-center">
-    <div>
-      <h1 class="text-2xl font-black text-slate-900 tracking-tight">KYC Compliance</h1>
+<div class="flex flex-col h-full space-y-4 md:space-y-6 p-4 md:p-6 bg-slate-50/50">
+  <div class="shrink-0 flex justify-between items-center" [class.hidden]="selectedUser">
+    <div class="xl:block">
+      <h1 class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">KYC Compliance</h1>
       <p class="text-sm text-slate-500 font-medium tracking-tight">Pending Verification Queue</p>
     </div>
   </div>
 
-  <div class="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-12 gap-6">
-    <div
-      class="xl:col-span-4 flex flex-col min-h-0 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+  <div class="flex-1 min-h-0 grid grid-cols-1 xl:grid-cols-12 gap-6 relative">
+    
+    <div [class.hidden]="selectedUser" 
+      class="xl:block xl:col-span-4 flex flex-col min-h-0 bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
       <div class="p-4 border-b border-slate-100 bg-slate-50/50">
         <input type="text" [(ngModel)]="searchQuery" placeholder="Search investor..."
           class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-blue-500">
@@ -16,18 +17,17 @@
 
       <div class="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
         @for (item of (filteredKycs$ | async); track item.id) {
-        <button (click)="openReview(item)" [class.border-blue-500]="selectedUser?.id === item.id"
+        <button (click)="selectedUser = item" 
+          [class.border-blue-500]="selectedUser?.id === item.id"
           [class.bg-blue-50]="selectedUser?.id === item.id"
           class="w-full text-left p-4 rounded-2xl border-2 border-transparent hover:bg-slate-50 transition-all">
           <div class="flex items-center gap-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs uppercase">
+            <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-bold text-xs uppercase shrink-0">
               {{ getInitials(item.user?.email) }}
             </div>
             <div class="flex-1 truncate">
               <p class="text-sm font-bold text-slate-900 truncate">{{ item.user?.email }}</p>
-              <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">LVL {{ item.level }} • {{
-                item.submitted_at | date:'short' }}</p>
+              <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest">LVL {{ item.level }}</p>
             </div>
           </div>
         </button>
@@ -35,56 +35,61 @@
       </div>
     </div>
 
-    <div class="xl:col-span-8 flex flex-col min-h-0">
+    <div [class.hidden]="!selectedUser" class="xl:flex xl:col-span-8 flex flex-col min-h-0">
       @if (selectedUser) {
-      <div
-        class="flex-1 flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden animate-in fade-in duration-300">
+      <div class="flex-1 flex flex-col bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden animate-in fade-in slide-in-from-right-4 xl:slide-in-from-right-0 duration-300">
 
-        <div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between shrink-0">
-          <div>
-            <h2 class="text-lg font-black text-slate-900">{{ selectedUser.user?.email }}</h2>
-            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Record ID: {{ selectedUser.id }}
-            </p>
+        <div class="px-4 md:px-8 py-4 md:py-6 border-b border-slate-100 flex items-center justify-between shrink-0 gap-4">
+          <div class="flex items-center gap-2 min-w-0">
+            <button (click)="selectedUser = null" class="xl:hidden p-2 -ml-2 text-slate-400 hover:text-slate-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="truncate">
+              <h2 class="text-base md:text-lg font-black text-slate-900 truncate">{{ selectedUser.user?.email }}</h2>
+              <p class="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">ID: {{ selectedUser.id }}</p>
+            </div>
           </div>
-          <div class="flex gap-2">
+          
+          <div class="flex gap-2 shrink-0">
             <button (click)="handleReview('rejected')"
-              class="px-5 py-2.5 bg-rose-50 text-rose-600 text-xs font-black rounded-xl hover:bg-rose-100 transition-all uppercase tracking-widest">
+              class="px-3 md:px-5 py-2 md:py-2.5 bg-rose-50 text-rose-600 text-[10px] font-black rounded-xl hover:bg-rose-100 transition-all uppercase tracking-widest">
               {{ showRejectionInput ? 'Confirm Deny' : 'Deny' }}
             </button>
-            <button *ngIf="!showRejectionInput" (click)="handleReview('approved')"
-              class="px-5 py-2.5 bg-blue-600 text-white text-xs font-black rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 uppercase tracking-widest">
+            @if (!showRejectionInput) {
+            <button (click)="handleReview('approved')"
+              class="px-3 md:px-5 py-2 md:py-2.5 bg-blue-600 text-white text-[10px] font-black rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 uppercase tracking-widest">
               Approve
             </button>
+            }
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <div class="flex-1 overflow-y-auto p-4 md:p-8 custom-scrollbar">
+          
           @if (showRejectionInput) {
           <div class="mb-8 animate-in slide-in-from-top-4">
-            <label class="block text-[10px] font-black text-rose-400 uppercase tracking-widest mb-2">Specify Rejection
-              Reason</label>
+            <label class="block text-[10px] font-black text-rose-400 uppercase tracking-widest mb-2">Specify Rejection Reason</label>
             <textarea [(ngModel)]="rejectionReason" rows="3"
-              class="w-full bg-rose-50 border border-rose-100 rounded-2xl p-4 text-sm text-rose-900 outline-none focus:ring-2 focus:ring-rose-200"
+              class="w-full bg-rose-50 border border-rose-100 rounded-2xl p-4 text-sm text-rose-900 outline-none focus:ring-2 focus:ring-rose-200 placeholder:text-rose-200"
               placeholder="e.g. Document is expired or blurred..."></textarea>
             <button (click)="showRejectionInput = false"
-              class="mt-2 text-[10px] font-bold text-rose-300 uppercase">Cancel Action</button>
+              class="mt-2 text-[10px] font-bold text-rose-300 hover:text-rose-400 uppercase transition-colors">Cancel Action</button>
           </div>
           }
 
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
             <div class="space-y-6">
               <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Metadata</h3>
-              <div class="space-y-3">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
                 <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <p class="text-[10px] font-bold text-slate-400 uppercase">Document Type</p>
-                  <p class="text-sm font-bold text-slate-900 capitalize">{{ selectedUser.documents[0]?.document_type }}
-                  </p>
+                  <p class="text-sm font-bold text-slate-900 capitalize">{{ selectedUser.documents[0]?.document_type }}</p>
                 </div>
                 <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                   <p class="text-[10px] font-bold text-slate-400 uppercase">Reference #</p>
-                  <p class="text-sm font-bold text-slate-900">{{ selectedUser.documents[0]?.document_number }}</p>
+                  <p class="text-sm font-bold text-slate-900 truncate">{{ selectedUser.documents[0]?.document_number }}</p>
                 </div>
-                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 sm:col-span-2 lg:col-span-1">
                   <p class="text-[10px] font-bold text-slate-400 uppercase">Issued Country</p>
                   <p class="text-sm font-bold text-slate-900">{{ selectedUser.documents[0]?.issued_country }}</p>
                 </div>
@@ -93,69 +98,23 @@
 
             <div class="space-y-4">
               <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Secure Scan Preview</h3>
-              @if (selectedDocUrl) {
               <div class="relative group cursor-zoom-in" (click)="isLightboxOpen = true">
-                <div
-                  class="aspect-[3/4] rounded-3xl bg-slate-100 border-2 border-dashed border-slate-200 overflow-hidden flex items-center justify-center">
-                  @if (getFileType(selectedDocUrl.url) === 'image') {
-                  <img [src]="selectedDocUrl.url"
-                    class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
-                  } @else if (getFileType(selectedDocUrl.url) === 'pdf') {
-                  <div class="text-center">
-                    <svg class="w-16 h-16 text-rose-500 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
-                    </svg>
-                    <span class="text-[10px] font-black text-slate-400 uppercase mt-2 block">Secure PDF</span>
-                  </div>
-                  }
-                  <div
-                    class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <span
-                      class="px-6 py-3 bg-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl">Expand
-                      Document</span>
-                  </div>
+                <div class="aspect-[3/4] rounded-3xl bg-slate-100 border-2 border-dashed border-slate-200 overflow-hidden relative">
+                   <img *ngIf="selectedDocUrl" [src]="selectedDocUrl.url" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500">
+                   <div class="absolute inset-0 bg-slate-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                     <span class="px-4 py-2 bg-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-xl">Expand</span>
+                   </div>
                 </div>
               </div>
-              } @else {
-              <div
-                class="aspect-[3/4] rounded-3xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-2 animate-pulse">
-                <div class="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <span class="text-[10px] font-black text-slate-400 uppercase">Authorizing Link...</span>
-              </div>
-              }
             </div>
           </div>
         </div>
       </div>
       } @else {
-      <div
-        class="flex-1 border-2 border-dashed border-slate-200 rounded-3xl flex flex-col items-center justify-center text-slate-400 p-12 text-center">
+      <div class="hidden xl:flex flex-1 border-2 border-dashed border-slate-200 rounded-3xl flex-col items-center justify-center text-slate-400 p-12 text-center">
         <p class="text-sm font-bold">Select an investor record to review</p>
       </div>
       }
     </div>
   </div>
 </div>
-
-@if (isLightboxOpen && selectedDocUrl) {
-<div class="fixed inset-0 z-[100] flex items-center justify-center p-6 animate-in fade-in duration-200">
-  <div (click)="isLightboxOpen = false" class="absolute inset-0 bg-slate-900/90 backdrop-blur-md"></div>
-  <div class="relative w-full max-w-6xl h-[90vh] flex flex-col">
-    <div class="flex justify-end p-4">
-      <button (click)="isLightboxOpen = false" class="p-2 bg-white/10 text-white rounded-full hover:bg-white/20">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-    </div>
-    <div class="flex-1 bg-white rounded-2xl overflow-hidden shadow-2xl">
-      @if (getFileType(selectedDocUrl.url) === 'image') {
-      <img [src]="selectedDocUrl.url" class="w-full h-full object-contain">
-      } @else if (getFileType(selectedDocUrl.url) === 'pdf') {
-      <iframe [src]="selectedDocUrl.url | safeUrl" class="w-full h-full border-none"></iframe>
-      }
-    </div>
-  </div>
-</div>
-}
