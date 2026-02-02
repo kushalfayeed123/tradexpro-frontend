@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { LoadOverviewData } from './state/overview.actions';
 import { OverviewState } from './state/overview.state';
-import { map, Subscription, take, timer } from 'rxjs';
+import { map, Observable, Subscription, take, timer } from 'rxjs';
 import { LoadActiveDepositMethods, LoadDepositMethods } from '../../admin/pages/settings/state/settings.action';
 import { UsersState } from '../../admin/pages/users/state/users.state';
 import { AuthState } from '../../auth/state/auth.state';
@@ -35,8 +35,7 @@ export class Dashboard implements OnInit {
   userSenderAddress: string = '';
 
   // Timer logic
-  remainingTime = '';
-  private timerSub?: Subscription;
+  remainingTime$: Observable<string> | null = null; private timerSub?: Subscription;
 
 
   isWithdrawModalOpen = false;
@@ -101,19 +100,28 @@ export class Dashboard implements OnInit {
 
   startCountdown() {
     const tenMinutes = 10 * 60;
-    this.timerSub?.unsubscribe();
 
-    this.timerSub = timer(0, 1000).pipe(
+    // Assign the timer logic directly to the Observable
+    this.remainingTime$ = timer(0, 1000).pipe(
       take(tenMinutes + 1),
-      map(seconds => tenMinutes - seconds)
-    ).subscribe({
-      next: (secondsLeft) => {
+      map(seconds => {
+        const secondsLeft = tenMinutes - seconds;
+
+        // Handle the auto-close logic here
+        if (secondsLeft === 0) {
+          this.closeDepositModal();
+        }
+
         const mins = Math.floor(secondsLeft / 60);
         const secs = secondsLeft % 60;
-        this.remainingTime = `${mins}:${secs.toString().padStart(2, '0')}`;
-        if (secondsLeft === 0) this.closeDepositModal();
-      }
-    });
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+      })
+    );
+  }
+
+  closeDepositModal() {
+    this.isDepositModalOpen = false;
+    this.remainingTime$ = null; // Clear the observable
   }
 
   generateReference(type: string) {
@@ -145,10 +153,7 @@ export class Dashboard implements OnInit {
     });
   }
 
-  closeDepositModal() {
-    this.isDepositModalOpen = false;
-    this.timerSub?.unsubscribe();
-  }
+
 
   ngOnInit() {
     this.store.dispatch(new LoadOverviewData());

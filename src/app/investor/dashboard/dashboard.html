@@ -125,7 +125,7 @@
 
     <div
       class="absolute top-8 right-8 px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-widest">
-      Expires in {{ remainingTime }}
+      Expires in {{ remainingTime$ | async}}
     </div>
 
     @if (depositStep === 1) {

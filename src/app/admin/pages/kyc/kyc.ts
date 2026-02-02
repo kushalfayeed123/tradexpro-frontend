@@ -8,7 +8,7 @@ import { map } from 'rxjs';
 
 @Component({
   selector: 'app-kyc',
-  imports: [CommonModule, FormsModule, forwardRef(() => SafeUrlPipe)],
+  imports: [CommonModule, FormsModule],
   templateUrl: './kyc.html',
   styleUrl: './kyc.css',
 })
