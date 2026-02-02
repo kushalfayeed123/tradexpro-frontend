@@ -7,5 +7,10 @@ import { Component } from '@angular/core';
   styleUrl: './home.css',
 })
 export class Home {
-
+  downloadPDF() {
+    const link = document.createElement('a');
+    link.href = 'prospera_whitepaper_v5.pdf';
+    link.download = 'prospera_whitepaper_v5.pdf';
+    link.click();
+  }
 }
