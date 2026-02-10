@@ -19,6 +19,7 @@ import { MyInvestmentsState } from './investor/investments/state/user-investment
 import { KycState } from './investor/kyc/state/kyc.state';
 import { AdminKycState } from './admin/pages/kyc/state/admin-kyc.state';
 import { AdminState } from './admin/pages/dashboard/state/dashboard.state';
+import { ReferralState } from './investor/referrals/state/referrals.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -44,7 +45,8 @@ export const appConfig: ApplicationConfig = {
         MyInvestmentsState,
         KycState,
         AdminKycState,
-        AdminState
+        AdminState,
+        ReferralState
       ], {
         developmentMode: true,
       }),

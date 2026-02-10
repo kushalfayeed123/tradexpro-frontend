@@ -80,8 +80,7 @@ export class InvestorTransactionState {
 
         return this.api.getInvestorTransactions(params).pipe(
             tap((res: any) => {
-                // Based on your JSON: { "data": [...], "status": 200, ... }
-                console.log('API Response:', res);
+              
 
                 ctx.patchState({
                     list: res.data || [],       // Use res.data, not transactions.data

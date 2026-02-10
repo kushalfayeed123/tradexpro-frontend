@@ -38,6 +38,7 @@ export class Auth {
     first_name: '',
     last_name: '',
     phone: '',
+    referralCode: '', // Add this line
     otp: ['', '', '', '', '', '']
   };
 
@@ -85,6 +86,7 @@ export class Auth {
   async handleRegister() {
     this.store.dispatch(new SetLoading(true));
     try {
+  
       const result = await this.authService.signUp(this.formData);
       this.currentUserId = result.userId;
       this.notify.show('Account created! Please verify your email.', 'success');

@@ -13,6 +13,7 @@ export const INVESTOR_ROUTES: Routes = [
       { path: 'wallet', loadComponent: () => import('./wallets/wallets').then(m => m.Wallets) },
       { path: 'ledger', loadComponent: () => import('./audit-logs/audit-logs').then(m => m.AuditLogs) },
       { path: 'plans', loadComponent: () => import('./explore-plans/explore-plans').then(m => m.ExplorePlans) },
+      { path: 'rewards', loadComponent: () => import('./referrals/referrals').then(m => m.Referrals) },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
     ],
   },

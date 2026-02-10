@@ -25,7 +25,6 @@ export class InvestmentPlans {
   }
 
   openEditor(plan?: any) {
-    console.log(plan)
     // If plan exists, we clone it to avoid mutating state directly
     this.selectedPlan = plan ? { ...plan } : {
       name: '',

@@ -81,7 +81,8 @@ export class AuthApiService {
       firstName: userData.first_name,
       lastName: userData.last_name,
       phone: userData.phone,
-      country: 'USA' // Add a default or bind to UI
+      country: 'USA', // Add a default or bind to UI
+      referralCode: userData.referralCode
 
     }; return lastValueFrom(
       this.http.post(`${this.API_URL}/auth/register`, payload)
