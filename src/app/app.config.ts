@@ -20,6 +20,7 @@ import { KycState } from './investor/kyc/state/kyc.state';
 import { AdminKycState } from './admin/pages/kyc/state/admin-kyc.state';
 import { AdminState } from './admin/pages/dashboard/state/dashboard.state';
 import { ReferralState } from './investor/referrals/state/referrals.state';
+import { AdminPromoState } from './admin/pages/promotion/state/promotion.state';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,7 +47,8 @@ export const appConfig: ApplicationConfig = {
         KycState,
         AdminKycState,
         AdminState,
-        ReferralState
+        ReferralState,
+        AdminPromoState
       ], {
         developmentMode: true,
       }),

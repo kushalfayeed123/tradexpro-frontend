@@ -1,0 +1,82 @@
+<div class="p-8 max-w-7xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+  
+  <header class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Referral Management</h1>
+      <p class="text-slate-500 font-medium">Monitor program performance and pending payouts.</p>
+    </div>
+    <button (click)="ngOnInit()" class="px-6 py-3 bg-white border border-slate-200 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition-colors">
+      Refresh Data
+    </button>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+    @for (stat of (stats$ | async)?.summary; track stat.label) {
+      <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm">
+        <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">{{ stat.label }}</p>
+        <h2 class="text-2xl font-black text-slate-900 mt-1">{{ stat.value }}</h2>
+      </div>
+    }
+  </div>
+
+  <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-200/50 overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50/50 border-b border-slate-100">
+            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Referrer (Earner)</th>
+            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Referee (New User)</th>
+            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Reward</th>
+            <th class="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date Joined</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          @for (item of (referrals$ | async); track item.id) {
+            <tr class="group hover:bg-slate-50/50 transition-colors">
+              <td class="px-8 py-6">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center font-black text-blue-600 text-xs">
+                    {{ item.referrer.profile.first_name[0] }}
+                  </div>
+                  <div>
+                    <p class="font-black text-slate-900">{{ item.referrer.profile.first_name }} {{ item.referrer.profile.last_name }}</p>
+                    <p class="text-xs text-slate-400 font-medium">{{ item.referrer.email }}</p>
+                  </div>
+                </div>
+              </td>
+
+              <td class="px-8 py-6">
+                <div>
+                  <p class="font-bold text-slate-700">{{ item.referee.profile.first_name }}</p>
+                  <p class="text-xs text-slate-400">{{ item.referee.email }}</p>
+                </div>
+              </td>
+
+              <td class="px-8 py-6">
+                <span [class]="getStatusClass(item.status)" 
+                      class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border">
+                  {{ item.status }}
+                </span>
+              </td>
+
+              <td class="px-8 py-6">
+                <p class="font-black text-slate-900">${{ item.reward_amount || 0 }}</p>
+              </td>
+
+              <td class="px-8 py-6 text-xs text-slate-400 font-medium">
+                {{ item.created_at | date:'MMM dd, yyyy' }}
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="px-8 py-20 text-center">
+                <p class="text-slate-400 font-bold uppercase tracking-widest text-xs">No referrals found yet.</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
