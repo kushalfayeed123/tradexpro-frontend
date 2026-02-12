@@ -19,23 +19,28 @@ export class App {
   private router = inject(Router);
   // Reactive loading state for the entire app
   isLoading$ = this.store.select(AuthState.isLoading);
+  showLoading = false;
 
 
   ngOnInit() {
+    const currentPath = window.location.pathname;
+    if (currentPath !== '/home') {
+      this.showLoading = true;
+    }
     // 1. Rehydrate user data from server
     this.store.dispatch(new InitializeAuth()).subscribe(() => {
       const user = this.store.selectSnapshot(AuthState.user);
 
       if (user) {
         // 2. Only redirect IF the user is currently on the login or home page
-        const currentPath = window.location.pathname;
+
         if (currentPath === '/login') {
           const dashboard = user.role === 'admin' ? '/admin/dashboard' : '/investor/dashboard';
           this.router.navigate([dashboard]);
+        } else {
+          this.router.navigate([currentPath]);
         }
-         
-        // If currentPath is /admin/kyc, we do NOTHING. 
-        // The router will naturally load the KYC component.
+
       }
     });
   }
