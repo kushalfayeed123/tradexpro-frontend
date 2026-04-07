@@ -14,7 +14,7 @@ import { InitializeAuth } from './auth/state/auth.actions';
   styleUrl: './app.css'
 })
 export class App {
-  protected title = 'ProsperaFinWealth';
+  protected title = 'TradexalPro';
   private store = inject(Store);
   private router = inject(Router);
   // Reactive loading state for the entire app

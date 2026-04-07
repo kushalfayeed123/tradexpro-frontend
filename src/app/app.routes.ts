@@ -4,7 +4,6 @@ import { authGuard, adminGuard, loginGuard } from './core/guards/auth.guard';
 import { Home } from './site/pages/home/home';
 
 export const routes: Routes = [
-  { path: 'home', component: Home, },
   { path: 'login', component: Auth,  },
   {
     path: 'admin',
@@ -18,5 +17,5 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./investor/investor-routes').then(m => m.INVESTOR_ROUTES),
   },
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
