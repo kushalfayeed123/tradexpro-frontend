@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://api.prosperafinwealth.com/api',
+  apiUrl: 'https://tradexpro-api.onrender.com/api',
 };
