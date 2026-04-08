@@ -3,49 +3,59 @@
 
   <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
     <div>
-      <h1 class="text-3xl font-black text-slate-900 tracking-tight">Overview</h1>
-      <p class="text-slate-500 text-sm font-medium">Monitoring your capital growth and distributions.</p>
+      <h1 class="text-3xl font-black text-white tracking-tight">Overview</h1>
+      <p class="text-white text-sm font-medium">Monitoring your capital growth and distributions.</p>
     </div>
     <div class="flex gap-2 w-full md:w-auto">
       <button (click)="openWithdrawModal()"
-        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-white border border-slate-200 rounded-xl text-xs font-black uppercase text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Withdraw</button>
+        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-[#5364f1] border rounded-xl text-xs font-black uppercase text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Withdraw</button>
       <button (click)="startDeposit()"
-        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-blue-600 rounded-xl text-xs font-black uppercase text-white hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">Deposit
+        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-[#2a9d8f] rounded-xl text-xs font-black uppercase text-white hover:bg-blue-700  transition-all">Deposit
         Capital</button>
     </div>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <div
-      class="md:col-span-2 bg-slate-900 rounded-4xl p-8 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl">
+      class="md:col-span-2 rounded-[2rem] p-8 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl shadow-pink-500/20"
+      style="background: linear-gradient(90deg, #e52e71, #ff8a00);">
+
+      <div class="absolute inset-0 bg-white/5 pointer-events-none"></div>
+
       <div class="relative z-10">
-        <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Total Net Worth</p>
-        <div class="flex items-baseline gap-2">
-          <h2 class="text-6xl font-black tracking-tighter">{{ stats.total_net_worth | currency }}</h2>
-          <span class="text-emerald-400 text-sm font-bold bg-emerald-400/10 px-2 py-1 rounded">+{{
-            stats.growth_percentage }}%</span>
+        <p class="text-white/70 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Total Net Worth</p>
+        <div class="flex items-baseline gap-3">
+          <h2 class="text-6xl font-black tracking-tighter drop-shadow-sm">{{ stats.total_net_worth | currency }}</h2>
+          <span
+            class="text-white text-xs font-black bg-black/20 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10">
+            +{{ stats.growth_percentage }}%
+          </span>
         </div>
       </div>
+
       <div class="mt-12 flex gap-10 relative z-10">
         <div>
-          <p class="text-slate-500 text-[10px] font-black uppercase mb-1">Active Investments</p>
-          <p class="text-xl font-bold">{{ stats.active_investments | currency }}</p>
+          <p class="text-white/70 text-[10px] font-black uppercase mb-1 tracking-wider">Active Investments</p>
+          <p class="text-2xl font-black">{{ stats.active_investments | currency }}</p>
         </div>
-        <div class="border-l border-slate-800 pl-10">
-          <p class="text-slate-500 text-[10px] font-black uppercase mb-1">Ledger Balance</p>
-          <p class="text-xl font-bold text-blue-400">{{ stats.ledger_balance | currency }}</p>
+
+        <div class="border-l border-white/20 pl-10">
+          <p class="text-white/70 text-[10px] font-black uppercase mb-1 tracking-wider">Ledger Balance</p>
+          <p class="text-2xl font-black text-white">{{ stats.ledger_balance | currency }}</p>
         </div>
       </div>
-      <div class="absolute right-0 top-0 w-64 h-64 bg-blue-600/20 rounded-full blur-[100px] -mr-32 -mt-32"></div>
+
+      <div class="absolute right-0 top-0 w-72 h-72 bg-white/20 rounded-full blur-[110px] -mr-36 -mt-36"></div>
+      <div class="absolute left-0 bottom-0 w-48 h-48 bg-black/10 rounded-full blur-[80px] -ml-24 -mb-24"></div>
     </div>
 
-    <div class="bg-white border border-slate-200 rounded-4xl p-8 flex flex-col justify-between shadow-sm">
+    <div class="bg-[#535a94] border  rounded-4xl p-8 flex flex-col justify-between shadow-sm">
       <div class="space-y-4">
-        <p class="text-slate-400 text-[10px] font-black uppercase tracking-widest">Growth Performance</p>
+        <p class="text-white text-[10px] font-black uppercase tracking-widest">Growth Performance</p>
         <div class="space-y-2">
           <div class="flex justify-between text-xs font-bold uppercase tracking-tighter">
-            <span class="text-slate-500">Yield Progress</span>
-            <span class="text-blue-600">{{ stats.yield_progress }}%</span>
+            <span class="text-white">Yield Progress</span>
+            <span class="text-white">{{ stats.yield_progress }}%</span>
           </div>
           <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
             <div class="h-full bg-blue-600 rounded-full transition-all duration-1000"
@@ -53,19 +63,19 @@
           </div>
         </div>
       </div>
-      <p class="text-[11px] text-slate-500 mt-6 italic">Next distribution in {{ stats.next_distribution_days }} days</p>
+      <p class="text-[11px] text-white mt-6 italic">Next distribution in {{ stats.next_distribution_days }} days</p>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class="lg:col-span-8 bg-white border border-slate-200 rounded-4xl shadow-sm overflow-hidden">
-      <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-        <h3 class="font-black text-slate-900 text-sm uppercase tracking-widest">Active Portfolio</h3>
+    <div class="lg:col-span-8 bg-[#535a94] border  rounded-4xl shadow-sm overflow-hidden">
+      <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-[#535a94]">
+        <h3 class="font-black text-white text-sm uppercase tracking-widest">Active Portfolio</h3>
         <button class="text-[10px] font-black text-blue-600 uppercase">View All</button>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full">
-          <thead class="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest bg-slate-50">
+          <thead class="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest bg-[#535a94]">
             <tr>
               <th class="px-8 py-4">Investment Plan</th>
               <th class="px-8 py-4">Status</th>
@@ -96,18 +106,18 @@
       </div>
     </div>
 
-    <div class="lg:col-span-4 bg-white border border-slate-200 rounded-4xl shadow-sm p-8">
-      <h3 class="font-black text-slate-900 text-sm uppercase tracking-widest mb-8">Recent Activity</h3>
+    <div class="lg:col-span-4 bg-[#535a94] border  rounded-4xl shadow-sm p-8">
+      <h3 class="font-black text-white text-sm uppercase tracking-widest mb-8">Recent Activity</h3>
       <div class="space-y-8 relative">
-        <div class="absolute left-4 top-0 bottom-0 w-px bg-slate-100"></div>
+        <div class="absolute left-4 top-0 bottom-0 w-px bg-[#535a94]"></div>
         @for (activity of stats.recent_activity; track activity.id) {
         <div class="flex items-start gap-6 relative">
           <div
             class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center z-10">
           </div>
           <div>
-            <p class="text-xs font-black text-slate-900">{{ activity.title }}</p>
-            <p class="text-[10px] text-slate-400 font-bold uppercase mt-1">{{ activity.date | date:'MMM d' }} • {{
+            <p class="text-xs font-black text-white">{{ activity.title }}</p>
+            <p class="text-[10px] text-white font-bold uppercase mt-1">{{ activity.date | date:'MMM d' }} • {{
               activity.amount | currency }} {{ activity.type }}</p>
           </div>
         </div>
