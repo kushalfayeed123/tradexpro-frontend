@@ -8,7 +8,7 @@
     </div>
     <div class="flex gap-2 w-full md:w-auto">
       <button (click)="openWithdrawModal()"
-        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-[#5364f1] border rounded-xl text-xs font-black uppercase text-slate-700 hover:bg-slate-50 shadow-sm transition-all">Withdraw</button>
+        class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-[#5364f1]  rounded-xl text-xs font-black uppercase text-white hover:bg-[#e52e71] shadow-sm transition-all">Withdraw</button>
       <button (click)="startDeposit()"
         class="cursor-pointer flex-1 md:flex-none px-6 py-3 bg-[#2a9d8f] rounded-xl text-xs font-black uppercase text-white hover:bg-blue-700  transition-all">Deposit
         Capital</button>
@@ -16,8 +16,7 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <div
-      class="md:col-span-2 rounded-[2rem] p-8 text-white relative overflow-hidden flex flex-col justify-between shadow-2xl shadow-pink-500/20"
+    <div class="md:col-span-2 rounded-4xl p-8 text-white relative overflow-hidden flex flex-col justify-between"
       style="background: linear-gradient(90deg, #e52e71, #ff8a00);">
 
       <div class="absolute inset-0 bg-white/5 pointer-events-none"></div>
@@ -49,7 +48,7 @@
       <div class="absolute left-0 bottom-0 w-48 h-48 bg-black/10 rounded-full blur-[80px] -ml-24 -mb-24"></div>
     </div>
 
-    <div class="bg-[#535a94] border  rounded-4xl p-8 flex flex-col justify-between shadow-sm">
+    <div class="bg-[#535a94]  rounded-4xl p-8 flex flex-col justify-between shadow-sm">
       <div class="space-y-4">
         <p class="text-white text-[10px] font-black uppercase tracking-widest">Growth Performance</p>
         <div class="space-y-2">
@@ -68,14 +67,14 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-    <div class="lg:col-span-8 bg-[#535a94] border  rounded-4xl shadow-sm overflow-hidden">
+    <div class="lg:col-span-8 bg-[#535a94]  rounded-4xl shadow-sm overflow-hidden">
       <div class="px-8 py-6 border-b border-slate-100 flex justify-between items-center bg-[#535a94]">
         <h3 class="font-black text-white text-sm uppercase tracking-widest">Active Portfolio</h3>
-        <button class="text-[10px] font-black text-blue-600 uppercase">View All</button>
+        <button class="text-[10px] font-black text-white uppercase">View All</button>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full">
-          <thead class="text-left text-[10px] font-black text-slate-400 uppercase tracking-widest bg-[#535a94]">
+          <thead class="text-left text-[10px] font-black text-white uppercase tracking-widest bg-[#535a94]">
             <tr>
               <th class="px-8 py-4">Investment Plan</th>
               <th class="px-8 py-4">Status</th>
@@ -106,7 +105,7 @@
       </div>
     </div>
 
-    <div class="lg:col-span-4 bg-[#535a94] border  rounded-4xl shadow-sm p-8">
+    <div class="lg:col-span-4 bg-[#535a94]  rounded-4xl shadow-sm p-8">
       <h3 class="font-black text-white text-sm uppercase tracking-widest mb-8">Recent Activity</h3>
       <div class="space-y-8 relative">
         <div class="absolute left-4 top-0 bottom-0 w-px bg-[#535a94]"></div>
@@ -130,83 +129,89 @@
 
 
 @if (isDepositModalOpen) {
-<div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative">
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+  <div
+    class="bg-[#535a94]/95 border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-200">
 
     <div
-      class="absolute top-8 right-8 px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+      class="absolute top-8 right-8 px-3 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md">
       Expires in {{ remainingTime$ | async}}
     </div>
 
     @if (depositStep === 1) {
-    <h2 class="text-2xl font-black text-slate-900 mb-2">Select Asset</h2>
-    <p class="text-slate-500 text-xs mb-6">Choose the network you wish to fund with.</p>
+    <h2 class="text-2xl font-black text-white mb-2 tracking-tight">Select Asset</h2>
+    <p class="text-white/50 text-xs mb-6">Choose the network you wish to fund with.</p>
 
     <div class="space-y-3 mb-8">
       @for (w of (treasuryMethods$ | async); track w.id) {
       <div (click)="selectedWallet = w; depositStep = 2"
-        class="p-4 border-2 rounded-2xl cursor-pointer transition-all hover:border-blue-600 border-slate-100 flex justify-between items-center">
+        class="p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer transition-all hover:border-[#5364f1] hover:bg-white/10 flex justify-between items-center group">
         <div>
-          <p class="font-black text-slate-900">{{ w.asset_name }}</p>
-          <p class="text-[10px] font-bold text-blue-500 uppercase">{{ w.network }}</p>
+          <p class="font-black text-white group-hover:text-[#5364f1] transition-colors">{{ w.asset_name }}</p>
+          <p class="text-[10px] font-bold text-white/40 uppercase tracking-tighter">{{ w.network }}</p>
         </div>
-        <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M9 5l7 7-7 7" stroke-width="3" />
+        <svg class="w-5 h-5 text-white/20 group-hover:text-[#5364f1] transition-colors" fill="none"
+          stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M9 5l7 7-7 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </div>
       }
     </div>
+
     <button (click)="closeDepositModal()"
-      class="w-full py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">
+      class="w-full py-4 text-[10px] font-black text-white/40 uppercase tracking-widest hover:text-rose-400 transition-colors">
       Cancel & Close
     </button>
     }
 
     @if (depositStep === 2) {
-    <h2 class="text-2xl font-black text-slate-900 mb-2">Confirm Transfer</h2>
-    <p class="text-slate-500 text-xs mb-6">Send funds to the treasury address and provide details below.</p>
+    <h2 class="text-2xl font-black text-white mb-2 tracking-tight">Confirm Transfer</h2>
+    <p class="text-white/50 text-xs mb-6">Send funds to the treasury address and provide details below.</p>
 
-    <div class="bg-blue-50 p-6 rounded-3xl space-y-4 mb-6 border border-blue-100">
+    <div class="bg-blue-500/10 p-6 rounded-3xl space-y-4 mb-6 border border-blue-500/20 backdrop-blur-sm">
       <div>
-        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Treasury (Beneficiary)
+        <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Treasury (Beneficiary)
           Address</label>
-        <div class="flex items-center gap-2 mt-1">
-          <code class="text-xs font-mono break-all text-blue-900 font-bold">{{ selectedWallet.wallet_address }}</code>
+        <div class="mt-1">
+          <code class="text-xs font-mono break-all text-white font-bold">{{ selectedWallet.wallet_address }}</code>
         </div>
       </div>
 
       <div>
-        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Amount to send ($)</label>
+        <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Amount to send ($)</label>
         <input [(ngModel)]="depositAmount" type="number"
-          class="w-full bg-transparent text-2xl font-black focus:outline-none text-blue-900" placeholder="0.00">
+          class="w-full bg-transparent text-2xl font-black focus:outline-none text-white placeholder:text-white/20"
+          placeholder="0.00">
       </div>
     </div>
 
     <div class="space-y-4 mb-8">
       <div>
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Source Wallet
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest ml-2">Your Source Wallet
           Address</label>
         <input [(ngModel)]="userSenderAddress" type="text"
-          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          class="w-full mt-2 px-6 py-4 bg-black/20 border border-white/5 rounded-2xl font-mono text-xs font-bold text-white focus:ring-2 focus:ring-[#5364f1] outline-none"
           placeholder="Address you are sending from">
       </div>
 
       <div>
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Transaction Hash / Payment
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest ml-2">Transaction Hash / Payment
           Ref</label>
         <input [(ngModel)]="userPaymentHash" type="text"
-          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          class="w-full mt-2 px-6 py-4 bg-black/20 border border-white/5 rounded-2xl font-mono text-xs font-bold text-white focus:ring-2 focus:ring-[#5364f1] outline-none"
           placeholder="Paste the txn hash here">
       </div>
     </div>
 
     <div class="space-y-3">
       <button (click)="confirmDeposit()" [disabled]="!depositAmount || !userPaymentHash || !userSenderAddress"
-        class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-30">
+        class="w-full py-5 bg-[#5364f1] hover:bg-[#4352d1] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-20 shadow-xl shadow-blue-950/20">
         Confirm & Submit Transaction
       </button>
       <button (click)="depositStep = 1"
-        class="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest">Back</button>
+        class="w-full text-[10px] font-black text-white/40 uppercase tracking-widest hover:text-white transition-colors">
+        Back to Asset Selection
+      </button>
     </div>
     }
   </div>
@@ -215,39 +220,40 @@
 
 @if (isWithdrawModalOpen) {
 @if (stats$ | async; as stats) {
-<div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl">
-    <h2 class="text-2xl font-black text-slate-900 mb-2">Withdraw Capital</h2>
-    <p class="text-slate-500 text-xs mb-8">Transfer funds from your ledger to an external wallet.</p>
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+  <div
+    class="bg-[#535a94]/95 border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-200">
+    <h2 class="text-2xl font-black text-white mb-2 tracking-tight">Withdraw Capital</h2>
+    <p class="text-white/60 text-xs mb-8">Transfer funds from your ledger to an external wallet.</p>
 
     <form [formGroup]="withdrawForm" (ngSubmit)="onWithdrawSubmit(stats.ledger_balance)">
       <div class="space-y-6">
-        <div class="p-4 bg-blue-50 rounded-2xl flex justify-between items-center">
-          <span class="text-[10px] font-black text-blue-600 uppercase">Available Balance</span>
-          <span class="font-black text-blue-700">{{ stats.ledger_balance | currency }}</span>
+        <div class="p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex justify-between items-center">
+          <span class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Available Balance</span>
+          <span class="font-black text-white text-lg">{{ stats.ledger_balance | currency }}</span>
         </div>
 
         <div>
-          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Amount (USD)</label>
+          <label class="text-[10px] font-black text-white/40 uppercase tracking-widest ml-2">Amount (USD)</label>
           <input formControlName="amount" type="number"
-            class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-bold focus:ring-2 focus:ring-blue-500 transition-all"
+            class="w-full mt-2 px-6 py-4 bg-black/20 border border-white/5 rounded-2xl font-bold text-white focus:ring-2 focus:ring-[#5364f1] transition-all outline-none"
             placeholder="0.00">
         </div>
 
         <div class="relative">
-          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Select Payment
+          <label class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block ml-2">Select Payment
             Method</label>
           <button type="button" (click)="toggleDropdown()"
-            class="w-full p-5 bg-white border-2 border-slate-100 rounded-2xl flex justify-between items-center hover:border-blue-200 transition-all">
+            class="w-full p-5 bg-black/20 border border-white/5 rounded-2xl flex justify-between items-center hover:bg-black/30 transition-all group">
             @if (selectedWallet) {
             <div class="text-left">
-              <p class="text-xs font-black text-slate-900 uppercase">{{ selectedWallet.asset_name }}</p>
-              <p class="text-[10px] text-slate-400 font-bold uppercase">{{ selectedWallet.network }}</p>
+              <p class="text-xs font-black text-white uppercase">{{ selectedWallet.asset_name }}</p>
+              <p class="text-[10px] text-white/40 font-bold uppercase tracking-tighter">{{ selectedWallet.network }}</p>
             </div>
             } @else {
-            <span class="text-xs font-bold text-slate-400">Choose a method...</span>
+            <span class="text-xs font-bold text-white/30">Choose a method...</span>
             }
-            <svg class="w-5 h-5 text-slate-400 transition-transform" [class.rotate-180]="isDropdownOpen" fill="none"
+            <svg class="w-5 h-5 text-white/30 transition-transform" [class.rotate-180]="isDropdownOpen" fill="none"
               stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
@@ -255,14 +261,14 @@
 
           @if (isDropdownOpen) {
           <div
-            class="absolute z-20 top-full mt-2 w-full bg-white border border-slate-100 rounded-2xl shadow-xl overflow-hidden">
+            class="absolute z-20 top-full mt-2 w-full bg-[#535a94] border border-white/10 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
             @for (method of (treasuryMethods$ | async); track method.id) {
             <button (click)="selectMethod(method)"
-              class="w-full p-4 text-left hover:bg-slate-50 flex items-center justify-between group border-b border-slate-50 last:border-0">
+              class="w-full p-4 text-left hover:bg-white/10 flex items-center justify-between group border-b border-white/5 last:border-0 transition-colors">
               <div>
-                <p class="text-xs font-black text-slate-900 uppercase group-hover:text-blue-600">{{ method.asset_name }}
+                <p class="text-xs font-black text-white uppercase group-hover:text-[#5364f1]">{{ method.asset_name }}
                 </p>
-                <p class="text-[10px] text-slate-400 font-bold uppercase">{{ method.network }}</p>
+                <p class="text-[10px] text-white/40 font-bold uppercase">{{ method.network }}</p>
               </div>
             </button>
             }
@@ -271,21 +277,20 @@
         </div>
 
         <div>
-          <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Wallet
-            Address</label>
+          <label class="text-[10px] font-black text-white/40 uppercase tracking-widest ml-2">Your Wallet Address</label>
           <input formControlName="wallet_address" type="text"
-            class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold"
+            class="w-full mt-2 px-6 py-4 bg-black/20 border border-white/5 rounded-2xl font-mono text-xs font-bold text-white focus:ring-2 focus:ring-[#5364f1] outline-none"
             placeholder="Enter destination address">
         </div>
 
         <div class="pt-4 flex flex-col gap-3">
           <button type="submit" [disabled]="withdrawForm.invalid"
-            class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-600 transition-all disabled:opacity-50">
+            class="w-full py-5 bg-[#5364f1] hover:bg-[#4352d1] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all disabled:opacity-20 shadow-xl shadow-blue-950/20">
             Confirm Withdrawal
           </button>
           <button type="button" (click)="isWithdrawModalOpen = false"
-            class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-            Cancel
+            class="w-full py-2 text-[10px] font-black text-white/40 hover:text-white uppercase tracking-widest transition-colors">
+            Cancel & Close
           </button>
         </div>
       </div>

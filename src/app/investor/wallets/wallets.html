@@ -1,60 +1,60 @@
 <div class="max-w-5xl mx-auto space-y-10 animate-in fade-in duration-700">
 
   @if (balance$ | async; as stats) {
-  <div class="bg-slate-900 rounded-[3rem] p-12 text-white relative overflow-hidden shadow-2xl">
+  <div class="bg-slate-900 rounded-[3rem] p-12 text-white relative overflow-hidden shadow-2xl border border-white/5">
     <div class="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
       <div>
         <div class="flex items-center gap-2 mb-2">
-          <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-          <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em]">Liquid Ledger</p>
+          <div class="w-2 h-2 bg-[#2a9d8f] rounded-full animate-pulse shadow-[0_0_10px_rgba(42,157,143,0.5)]"></div>
+          <p class="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">Liquid Ledger</p>
         </div>
         <h2 class="text-6xl font-black tracking-tighter mb-2">
           {{ stats.ledger_balance | currency }}
-          <span class="text-2xl text-slate-500 uppercase">USD</span>
+          <span class="text-2xl text-white/20 uppercase ml-2">USD</span>
         </h2>
       </div>
-      <div class="flex gap-3">
+      <div class="flex gap-4">
         <button (click)="startDeposit()"
-          class="px-10 py-5 bg-blue-600 hover:bg-blue-700 rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-blue-600/20">
+          class="px-10 py-5 bg-[#5364f1] hover:bg-[#4352d1] rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-xl shadow-[#5364f1]/20 active:scale-95">
           Deposit
         </button>
         <button (click)="openWithdrawModal()"
-          class="px-10 py-5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest transition-all">
+          class="px-10 py-5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-xs font-black uppercase tracking-widest transition-all active:scale-95">
           Withdraw
         </button>
       </div>
     </div>
-    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px]"></div>
+    <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-[#5364f1]/10 rounded-full blur-[120px]"></div>
   </div>
   }
 
-  <div class="bg-white border border-slate-200 rounded-[2.5rem] p-8 shadow-sm">
+  <div class="bg-[#535a94] border border-white/10 rounded-[2.5rem] p-8 shadow-sm">
     <div class="flex justify-between items-center mb-8">
-      <h3 class="text-sm font-black text-slate-900 uppercase tracking-widest">Activity History</h3>
-      <span class="text-[10px] font-bold text-slate-400 uppercase italic">Real-time ledger updates</span>
+      <h3 class="text-sm font-black text-white uppercase tracking-widest">Activity History</h3>
+      <span class="text-[10px] font-bold text-white/40 uppercase italic tracking-wider">Real-time ledger updates</span>
     </div>
 
     <div class="space-y-4">
       @for (tx of (transactions$ | async); track tx.id) {
       <div
-        class="flex items-center justify-between p-5 bg-slate-50/50 rounded-2xl border border-slate-100 group hover:border-blue-200 transition-all">
+        class="flex items-center justify-between p-5 bg-black/10 rounded-2xl border border-white/5 group hover:border-[#5364f1]/50 transition-all">
         <div class="flex items-center gap-4">
           <div [ngClass]="{
-              'bg-emerald-100 text-emerald-600': tx.type === 'deposit' || tx.type === 'return',
-              'bg-slate-200 text-slate-600': tx.type === 'investment',
-              'bg-amber-100 text-amber-600': tx.type === 'withdrawal'
-            }" class="w-10 h-10 rounded-xl flex items-center justify-center">
+              'bg-[#2a9d8f]/10 text-[#2a9d8f]': tx.type === 'deposit' || tx.type === 'return',
+              'bg-white/10 text-white/60': tx.type === 'investment',
+              'bg-amber-500/10 text-amber-500': tx.type === 'withdrawal'
+            }" class="w-10 h-10 rounded-xl flex items-center justify-center border border-white/5">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               @if (tx.type === 'deposit' || tx.type === 'return') {
-              <path d="M12 4v16m8-8H4" stroke-width="2.5" /> }
+              <path d="M12 4v16m8-8H4" stroke-width="2.5" stroke-linecap="round"/> }
               @else {
-              <path d="M20 12H4" stroke-width="2.5" /> }
+              <path d="M20 12H4" stroke-width="2.5" stroke-linecap="round"/> }
             </svg>
           </div>
 
           <div>
-            <p class="text-sm font-bold text-slate-900">{{ tx.description }}</p>
-            <p class="text-[9px] text-slate-400 font-black uppercase tracking-widest">
+            <p class="text-sm font-bold text-white">{{ tx.description }}</p>
+            <p class="text-[9px] text-white/30 font-black uppercase tracking-widest mt-0.5">
               {{ tx.created_at | date:'MMM d, HH:mm' }} • REF: {{ tx.reference }}
             </p>
           </div>
@@ -62,14 +62,14 @@
 
         <div class="text-right">
           <p class="text-sm font-black" [ngClass]="{
-              'text-emerald-600': tx.type === 'deposit' || tx.type === 'return',
-              'text-slate-900': tx.type === 'withdrawal' || tx.type === 'investment'
+              'text-[#2a9d8f]': tx.type === 'deposit' || tx.type === 'return',
+              'text-white': tx.type === 'withdrawal' || tx.type === 'investment'
             }">
             {{ (tx.type === 'deposit' || tx.type === 'return') ? '+' : '-' }}{{ tx.amount | currency }}
           </p>
 
           <span [ngClass]="{
-              'text-emerald-500': tx.status === 'approved',
+              'text-[#2a9d8f]': tx.status === 'approved',
               'text-rose-500': tx.status === 'rejected',
               'text-amber-500': tx.status === 'pending'
             }" class="text-[9px] font-black uppercase tracking-tighter italic">
@@ -78,29 +78,30 @@
         </div>
       </div>
       } @empty {
-      <div class="py-20 text-center border-2 border-dashed border-slate-100 rounded-4xl">
-        <p class="text-slate-400 text-xs font-medium italic">No ledger activity found.</p>
+      <div class="py-20 text-center border-2 border-dashed border-white/5 rounded-4xl">
+        <p class="text-white/20 text-xs font-medium italic">No ledger activity found.</p>
       </div>
       }
     </div>
+
     @if (transactions$ | async; as list) {
     @if (list.length > 0) {
-    <div class="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between">
-      <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+    <div class="mt-8 pt-6 border-t border-white/5 flex items-center justify-between">
+      <p class="text-[10px] font-black text-white/30 uppercase tracking-widest">
         Page {{ currentPage }}
       </p>
 
       <div class="flex gap-2">
         <button (click)="prevPage()" [disabled]="currentPage === 1"
-          class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 disabled:opacity-30 transition-all">
-          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          class="p-3 rounded-xl border border-white/10 hover:bg-white/5 disabled:opacity-20 transition-all">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
 
         <button (click)="nextPage({total: 100})"
-          class="p-3 rounded-xl border border-slate-200 hover:bg-slate-50 transition-all">
-          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          class="p-3 rounded-xl border border-white/10 hover:bg-white/5 transition-all">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -112,132 +113,121 @@
 </div>
 
 @if (isDepositModalOpen) {
-<div class="fixed inset-0 z-100 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-  <div class="bg-white w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative">
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+  <div class="bg-[#535a94]/95 border border-white/10 w-full max-w-md rounded-[2.5rem] p-8 shadow-2xl relative animate-in zoom-in-95 duration-200">
 
-    <div
-      class="absolute top-8 right-8 px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-widest">
-      Expires in {{ remainingTime$ |async}}
+    <div class="absolute top-8 right-8 px-3 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/20 rounded-full text-[10px] font-black uppercase tracking-widest">
+      Expires in {{ remainingTime$ | async }}
     </div>
 
     @if (depositStep === 1) {
-    <h2 class="text-2xl font-black text-slate-900 mb-2">Select Asset</h2>
-    <p class="text-slate-500 text-xs mb-6">Choose the network you wish to fund with.</p>
+    <h2 class="text-2xl font-black text-white mb-2 tracking-tight">Select Asset</h2>
+    <p class="text-white/50 text-xs mb-6">Choose the network you wish to fund with.</p>
 
     <div class="space-y-3 mb-8">
       @for (w of (treasuryMethods$ | async); track w.id) {
       <div (click)="selectedWallet = w; depositStep = 2"
-        class="p-4 border-2 rounded-2xl cursor-pointer transition-all hover:border-blue-600 border-slate-100 flex justify-between items-center">
+        class="p-4 bg-white/5 border border-white/10 rounded-2xl cursor-pointer transition-all hover:border-[#5364f1] hover:bg-white/10 flex justify-between items-center group">
         <div>
-          <p class="font-black text-slate-900">{{ w.asset_name }}</p>
-          <p class="text-[10px] font-bold text-blue-500 uppercase">{{ w.network }}</p>
+          <p class="font-black text-white group-hover:text-[#5364f1]">{{ w.asset_name }}</p>
+          <p class="text-[10px] font-bold text-white/40 uppercase">{{ w.network }}</p>
         </div>
-        <svg class="w-5 h-5 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path d="M9 5l7 7-7 7" stroke-width="3" />
+        <svg class="w-5 h-5 text-white/20 group-hover:text-[#5364f1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M9 5l7 7-7 7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       }
     </div>
     <button (click)="closeDepositModal()"
-      class="w-full py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-rose-500 transition-colors">
+      class="w-full py-2 text-[10px] font-black text-white/40 uppercase tracking-widest hover:text-rose-400 transition-colors">
       Cancel & Close
     </button>
     }
 
     @if (depositStep === 2) {
-    <h2 class="text-2xl font-black text-slate-900 mb-2">Confirm Transfer</h2>
-    <p class="text-slate-500 text-xs mb-6">Send funds to the wallet address and provide details below.</p>
+    <h2 class="text-2xl font-black text-white mb-2 tracking-tight">Confirm Transfer</h2>
+    <p class="text-white/50 text-xs mb-6">Send funds to the wallet address and provide details below.</p>
 
-    <div class="bg-blue-50 p-6 rounded-3xl space-y-4 mb-6 border border-blue-100">
+    <div class="bg-blue-500/10 p-6 rounded-3xl space-y-4 mb-6 border border-blue-500/20">
       <div>
-        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Treasury (Beneficiary)
-          Address</label>
-        <div class="flex items-center gap-2 mt-1">
-          <code class="text-xs font-mono break-all text-blue-900 font-bold">{{ selectedWallet.wallet_address }}</code>
+        <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Treasury Address</label>
+        <div class="mt-1">
+          <code class="text-xs font-mono break-all text-white font-bold">{{ selectedWallet.wallet_address }}</code>
         </div>
       </div>
-
       <div>
-        <label class="text-[10px] font-black text-blue-400 uppercase tracking-widest">Amount to send ($)</label>
+        <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest">Amount to send ($)</label>
         <input [(ngModel)]="depositAmount" type="number"
-          class="w-full bg-transparent text-2xl font-black focus:outline-none text-blue-900" placeholder="0.00">
+          class="w-full bg-transparent text-2xl font-black text-white focus:outline-none" placeholder="0.00">
       </div>
     </div>
 
     <div class="space-y-4 mb-8">
       <div>
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Your Source Wallet
-          Address</label>
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest ml-2">Source Wallet</label>
         <input [(ngModel)]="userSenderAddress" type="text"
-          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
+          class="w-full mt-1 px-6 py-4 bg-black/20 border border-white/5 rounded-2xl font-mono text-xs font-bold text-white focus:ring-2 focus:ring-[#5364f1] outline-none"
           placeholder="Address you are sending from">
       </div>
-
       <div>
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Transaction Hash / Payment
-          Ref</label>
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest ml-2">Transaction Hash</label>
         <input [(ngModel)]="userPaymentHash" type="text"
-          class="w-full mt-1 px-6 py-4 bg-slate-50 border-none rounded-2xl font-mono text-xs font-bold focus:ring-2 focus:ring-blue-500"
-          placeholder="Paste the txn hash here">
+          class="w-full mt-1 px-6 py-4 bg-black/20 border border-white/5 rounded-2xl font-mono text-xs font-bold text-white focus:ring-2 focus:ring-[#5364f1] outline-none"
+          placeholder="Paste hash here">
       </div>
     </div>
 
     <div class="space-y-3">
       <button (click)="confirmDeposit()" [disabled]="!depositAmount || !userPaymentHash || !userSenderAddress"
-        class="w-full py-4 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-30">
-        Confirm & Submit Transaction
+        class="w-full py-5 bg-[#5364f1] text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#4352d1] transition-all disabled:opacity-20 shadow-lg shadow-[#5364f1]/20">
+        Submit Transaction
       </button>
       <button (click)="depositStep = 1"
-        class="w-full text-[10px] font-black text-slate-400 uppercase tracking-widest">Back</button>
+        class="w-full text-[10px] font-black text-white/40 uppercase tracking-widest">Back</button>
     </div>
     }
   </div>
 </div>
 }
+
 @if (isWithdrawModalOpen) {
-<div class="fixed inset-0 z-100 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4">
-  <div class="bg-white w-full max-w-md rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200">
-    <h2 class="text-2xl font-black text-slate-900 mb-1">Withdraw Capital</h2>
-    <p class="text-slate-500 text-xs mb-8">Move funds from your ledger to your external wallet.</p>
+<div class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+  <div class="bg-[#535a94]/95 border border-white/10 w-full max-w-md rounded-[3rem] p-10 shadow-2xl relative animate-in zoom-in-95 duration-200">
+    <h2 class="text-2xl font-black text-white mb-1 tracking-tight">Withdraw Capital</h2>
+    <p class="text-white/50 text-xs mb-8">Move funds from your ledger to an external wallet.</p>
 
     <form [formGroup]="withdrawForm" (ngSubmit)="onWithdrawSubmit()" class="space-y-6">
-      <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1 block">Amount to
-          Withdraw</label>
+      <div class="bg-black/20 p-6 rounded-3xl border border-white/5">
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-1 block">Amount to Withdraw</label>
         <input type="number" formControlName="amount"
-          class="w-full bg-transparent text-4xl font-black text-slate-900 outline-none">
+          class="w-full bg-transparent text-4xl font-black text-white outline-none placeholder:text-white/10" placeholder="0.00">
       </div>
 
-
       <div class="relative">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block">Select Payment
-          Method</label>
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-2 block ml-2">Payment Method</label>
         <button type="button" (click)="toggleDropdown()"
-          class="w-full p-5 bg-white border-2 border-slate-100 rounded-2xl flex justify-between items-center hover:border-blue-200 transition-all">
+          class="w-full p-5 bg-black/20 border border-white/5 rounded-2xl flex justify-between items-center hover:bg-black/30 transition-all">
           @if (selectedWallet) {
           <div class="text-left">
-            <p class="text-xs font-black text-slate-900 uppercase">{{ selectedWallet.asset_name }}</p>
-            <p class="text-[10px] text-slate-400 font-bold uppercase">{{ selectedWallet.network }}</p>
+            <p class="text-xs font-black text-white uppercase">{{ selectedWallet.asset_name }}</p>
+            <p class="text-[10px] text-white/40 font-bold uppercase">{{ selectedWallet.network }}</p>
           </div>
           } @else {
-          <span class="text-xs font-bold text-slate-400">Choose a method...</span>
+          <span class="text-xs font-bold text-white/20">Choose a method...</span>
           }
-          <svg class="w-5 h-5 text-slate-400 transition-transform" [class.rotate-180]="isDropdownOpen" fill="none"
-            stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-white/20 transition-transform" [class.rotate-180]="isDropdownOpen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
 
         @if (isDropdownOpen) {
-        <div
-          class="absolute z-20 top-full mt-2 w-full bg-white border border-slate-100 rounded-2xl shadow-xl overflow-hidden">
+        <div class="absolute z-20 top-full mt-2 w-full bg-[#535a94] border border-white/10 rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
           @for (method of (treasuryMethods$ | async); track method.id) {
           <button (click)="selectMethod(method)"
-            class="w-full p-4 text-left hover:bg-slate-50 flex items-center justify-between group border-b border-slate-50 last:border-0">
+            class="w-full p-4 text-left hover:bg-white/10 flex items-center justify-between group border-b border-white/5 last:border-0 transition-colors">
             <div>
-              <p class="text-xs font-black text-slate-900 uppercase group-hover:text-blue-600">{{ method.asset_name }}
-              </p>
-              <p class="text-[10px] text-slate-400 font-bold uppercase">{{ method.network }}</p>
+              <p class="text-xs font-black text-white uppercase group-hover:text-[#5364f1]">{{ method.asset_name }}</p>
+              <p class="text-[10px] text-white/40 font-bold uppercase">{{ method.network }}</p>
             </div>
           </button>
           }
@@ -245,20 +235,19 @@
         }
       </div>
 
-      <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100">
-        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Destination
-          Address</label>
-        <input formControlName="wallet_address" class="w-full bg-transparent text-sm font-mono outline-none"
-          placeholder="Paste destination address...">
+      <div class="bg-black/20 p-4 rounded-2xl border border-white/5">
+        <label class="text-[10px] font-black text-white/40 uppercase tracking-widest block mb-1">Destination Address</label>
+        <input formControlName="wallet_address" class="w-full bg-transparent text-sm font-mono text-white outline-none"
+          placeholder="Paste address here...">
       </div>
 
       <div class="flex flex-col gap-2 pt-4">
         <button type="submit" [disabled]="withdrawForm.invalid"
-          class="w-full py-5 bg-slate-900 text-white rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-blue-600 transition-all disabled:opacity-20">
+          class="w-full py-5 bg-[#5364f1] hover:bg-[#4352d1] text-white rounded-2xl text-xs font-black uppercase tracking-widest transition-all disabled:opacity-20 shadow-lg shadow-[#5364f1]/20">
           Request Withdrawal
         </button>
-        <button type="button" (click)="isWithdrawModalOpen = false"
-          class="text-[10px] font-black text-slate-400 uppercase py-2 text-center">Cancel</button>
+        <button (click)="isWithdrawModalOpen = false" type="button"
+          class="text-[10px] font-black text-white/40 uppercase py-2 text-center hover:text-white transition-colors">Cancel</button>
       </div>
     </form>
   </div>
