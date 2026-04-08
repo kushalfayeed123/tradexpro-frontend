@@ -1,4 +1,5 @@
 import { User } from "../../../../common/models/user.model";
+import { UpdateBalanceDto } from "../../../../core/services/transactions.service";
 
 export class FetchUsers {
     static readonly type = '[Users] Fetch All';
@@ -18,5 +19,10 @@ export class SelectUser {
 
 export class ClearSelectedUser {
     static readonly type = '[Users] Clear Selected';
+
+}
+export class UpdateBalance {
+    static readonly type = '[Users] Update Balance';
+    constructor(public userId: string, public amount: number, public description: string) { }
 
 }

@@ -125,6 +125,51 @@
 
                 <div class="flex-1 overflow-y-auto p-6 space-y-8 custom-scrollbar">
 
+                    <div class="space-y-4">
+                        <h3
+                            class="text-xs font-black text-slate-900 uppercase tracking-widest border-l-4 border-blue-600 pl-3">
+                            Financial Overview
+                        </h3>
+                        <div class="p-6 bg-slate-900 rounded-3xl text-white shadow-xl relative overflow-hidden group">
+                            <div
+                                class="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all">
+                            </div>
+
+                            <p class="text-[10px] font-bold text-blue-300 uppercase tracking-widest">Available Ledger
+                                Balance</p>
+                            <div class="flex items-baseline gap-1 mt-1">
+                                <span class="text-3xl font-black">{{ (user.wallet?.balance || 0) | currency }}</span>
+                                <span class="text-xs font-medium text-blue-400">USD</span>
+                            </div>
+
+                            <button (click)="showBalanceForm = !showBalanceForm"
+                                class="mt-6 w-full py-3 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                                {{ showBalanceForm ? 'Cancel Adjustment' : 'Manual Balance Adjustment' }}
+                            </button>
+                        </div>
+
+                        <div *ngIf="showBalanceForm"
+                            class="p-5 bg-white border-2 border-slate-100 rounded-3xl space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Amount (Negative to
+                                    subtract)</label>
+                                <input type="number" [(ngModel)]="adjAmount" placeholder="e.g. 500 or -500"
+                                    class="w-full mt-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-slate-400 uppercase ml-1">Internal Note /
+                                    Reason</label>
+                                <input type="text" [(ngModel)]="adjReason" placeholder="Reason for adjustment..."
+                                    class="w-full mt-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none">
+                            </div>
+                            <button (click)="submitBalanceUpdate(user.id)"
+                                [disabled]="!adjAmount || adjReason.length < 5"
+                                class="w-full py-4 bg-blue-600 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">
+                                Confirm Adjustment
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
                             <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Verification</p>
@@ -186,7 +231,10 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+
+
 
                 <!-- <div class="p-6 bg-slate-50 border-t border-slate-200 flex gap-3 shrink-0">
                     <button (click)="suspendUser(user.id)"

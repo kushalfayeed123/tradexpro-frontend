@@ -3,6 +3,12 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { environment } from "../../../environments/environment";
 
+export interface UpdateBalanceDto {
+    amount: number;
+    description: string;
+    userId: string;
+}
+
 export interface CreateTransactionDto {
     amount: number;
     type: 'deposit' | 'withdrawal' | 'investment';
@@ -43,6 +49,10 @@ export class TransactionsService {
 
     getInvestorTransactions(params: any): Observable<any> {
         return this.http.get(`${this.API_URL}/transactions`, { params });
+    }
+
+    updateUserBalance(dto: UpdateBalanceDto): Observable<any> {
+        return this.http.post(`${this.API_URL}/admin/transactions/update-balance`, dto)
     }
 
 }

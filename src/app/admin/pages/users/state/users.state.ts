@@ -3,7 +3,10 @@ import { Injectable, inject } from '@angular/core';
 import { User } from '../../../../common/models/user.model';
 import { NotificationService } from '../../../../core/services/notification.service';
 import { UsersApiService } from '../../../../core/services/users.service';
-import { FetchUsers, SelectUser, ClearSelectedUser } from './users.action';
+import { FetchUsers, SelectUser, ClearSelectedUser, UpdateBalance } from './users.action';
+import { TransactionsService, UpdateBalanceDto } from '../../../../core/services/transactions.service';
+import { catchError, finalize, mergeMap, of, tap, throwError } from 'rxjs';
+import { SetLoading } from '../../../../auth/state/auth.actions';
 
 
 export interface UsersStateModel {
@@ -20,6 +23,7 @@ export interface UsersStateModel {
 @Injectable()
 export class UsersState {
     private api = inject(UsersApiService);
+    private transactionApi = inject(TransactionsService);
     private notify = inject(NotificationService);
 
     @Selector() static list(state: UsersStateModel) { return state.items; }
@@ -50,5 +54,43 @@ export class UsersState {
     @Action(SelectUser)
     setSelected(ctx: StateContext<UsersStateModel>, { user }: SelectUser) {
         ctx.patchState({ selectedUser: user });
+    }
+
+    @Action(UpdateBalance, { cancelUncompleted: true })
+    updateBalance(ctx: StateContext<UsersStateModel>, { userId, amount, description }: UpdateBalance) {
+        ctx.dispatch(new SetLoading(true));
+
+        return this.transactionApi.updateUserBalance({ userId, amount, description }).pipe(
+            tap(() => {
+                const state = ctx.getState();
+
+                if (state.selectedUser && state.selectedUser.id === userId) {
+                    const currentBalance = Number(state.selectedUser.wallet?.balance || 0);
+
+                    // Create the updated user object
+                    const updatedUser = { ...state.selectedUser };
+
+                    // Only update the wallet if it exists to satisfy TS strictness
+                    if (updatedUser.wallet) {
+                        updatedUser.wallet = {
+                            ...updatedUser.wallet,
+                            balance: currentBalance + amount
+                        };
+                    }
+
+                    ctx.patchState({ selectedUser: updatedUser });
+                }
+
+                this.notify.show('Balance updated successfully', 'success');
+                ctx.dispatch(new FetchUsers());
+            }),
+            catchError((err) => {
+                this.notify.show(err?.error?.message || 'Error updating balance', 'error');
+                return throwError(() => err);
+            }),
+            finalize(() => {
+                ctx.dispatch(new SetLoading(false));
+            })
+        );
     }
 }

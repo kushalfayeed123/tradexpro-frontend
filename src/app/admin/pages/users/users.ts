@@ -1,20 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { FetchUsers, SelectUser, ClearSelectedUser } from './state/users.action';
+import { FetchUsers, SelectUser, ClearSelectedUser, UpdateBalance } from './state/users.action';
 import { UsersState } from './state/users.state';
 import { User } from '../../../common/models/user.model';
 import { Table } from '../../../common/components/table/table';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-users',
-  imports: [CommonModule, Table],
+  imports: [CommonModule, Table, FormsModule],
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
 export class Users {
   private store = inject(Store);
   isUserDrawerOpen = false
+  showBalanceForm = false;
+  adjAmount: number | null = null;
+  adjReason: string = '';
 
   users$ = this.store.select(UsersState.list);
   selectedUser$ = this.store.select(UsersState.selected);
@@ -69,6 +73,9 @@ export class Users {
 
   closeDrawer() {
     this.isUserDrawerOpen = false;
+    this.showBalanceForm = false;
+    this.adjAmount = null;
+    this.adjReason = '';
     this.store.dispatch(new ClearSelectedUser());
   }
 
@@ -93,7 +100,6 @@ export class Users {
     return (firstInitial + lastInitial).toUpperCase();
   }
 
-  // user-directory.component.ts
 
   getVisiblePages(current: number, total: number): number[] {
     const maxVisible = 5; // How many buttons to show
@@ -113,4 +119,11 @@ export class Users {
   }
 
   suspendUser(userId: string) { }
+
+  async submitBalanceUpdate(userId: string) {
+    if (!this.adjAmount || this.adjReason.length < 5) return;
+
+    this.store.dispatch(new UpdateBalance(userId, this.adjAmount, this.adjReason));
+
+  }
 }

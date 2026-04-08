@@ -76,6 +76,7 @@ export class Transactions {
 
   approveTrx(id: string) {
     // Optional: Add a confirmation dialog for safety
+
     this.store.dispatch(new ApproveTransaction(id)).subscribe(() => {
       this.closeDrawer();
     });
