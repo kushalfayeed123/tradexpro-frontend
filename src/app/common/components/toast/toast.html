@@ -16,29 +16,30 @@
 </div>
 
 @if (notify.modal$ | async; as config) {
-<div class="fixed inset-0 z-1000 flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-300"
+<div class="fixed inset-0 z-[1000] flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300"
         (click)="notify.closeModal(false)"></div>
 
     <div
-        class="relative bg-white w-full max-w-sm rounded-4xl shadow-2xl p-8 animate-in zoom-in-95 duration-200 border border-slate-100">
-        <div class="bg-rose-50 w-12 h-12 rounded-2xl flex items-center justify-center mb-6">
-            <svg class="w-6 h-6 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        class="relative bg-[#535a94]/95 w-full max-w-sm rounded-[2.5rem] shadow-2xl p-8 animate-in zoom-in-95 duration-200 border border-white/10 backdrop-blur-xl">
+        
+        <div class="bg-rose-500/10 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 border border-rose-500/20">
+            <svg class="w-6 h-6 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
         </div>
 
-        <h3 class="text-xl font-bold text-slate-900 mb-2">{{ config.title }}</h3>
-        <p class="text-slate-500 text-sm leading-relaxed mb-8">{{ config.message }}</p>
+        <h3 class="text-xl font-black text-white mb-2 tracking-tight">{{ config.title }}</h3>
+        <p class="text-white/60 text-sm leading-relaxed mb-8">{{ config.message }}</p>
 
         <div class="flex flex-col gap-3">
             <button (click)="notify.closeModal(true)"
-                class="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-800 transition-all">
+                class="w-full bg-[#5364f1] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-[#4352d1] transition-all shadow-lg shadow-black/20">
                 {{ config.confirmText }}
             </button>
             <button (click)="notify.closeModal(false)"
-                class="w-full bg-white text-slate-400 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest hover:text-slate-900 transition-all">
+                class="w-full bg-transparent text-white/40 py-2 rounded-2xl font-black text-xs uppercase tracking-widest hover:text-white transition-all">
                 Cancel
             </button>
         </div>
