@@ -163,7 +163,7 @@
                                     class="w-full mt-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500 outline-none">
                             </div>
                             <button (click)="submitBalanceUpdate(user.id)"
-                                [disabled]="!adjAmount || adjReason.length < 5"
+                                [disabled]="!adjAmount"
                                 class="w-full py-4 bg-blue-600 disabled:bg-slate-200 disabled:text-slate-400 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all">
                                 Confirm Adjustment
                             </button>

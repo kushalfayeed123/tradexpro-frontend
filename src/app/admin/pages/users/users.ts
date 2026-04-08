@@ -121,9 +121,9 @@ export class Users {
   suspendUser(userId: string) { }
 
   async submitBalanceUpdate(userId: string) {
-    if (!this.adjAmount || this.adjReason.length < 5) return;
+    if (!this.adjAmount) return;
 
-    this.store.dispatch(new UpdateBalance(userId, this.adjAmount, this.adjReason));
+    this.store.dispatch(new UpdateBalance(userId, this.adjAmount, this.adjReason ?? ''));
 
   }
 }
